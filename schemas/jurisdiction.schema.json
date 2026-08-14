@@ -1,7 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:civic-source-catalog:jurisdiction:retired",
-  "title": "Retired Civic Source Catalog jurisdiction schema",
-  "description": "The pre-v1 jurisdiction record was replaced by publisher, place, endpoint, and coverage records. This retired schema intentionally validates no instance.",
-  "not": {}
-}

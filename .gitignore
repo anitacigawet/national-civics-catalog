@@ -2,3 +2,15 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .coverage
+operator_only/
+
+# Preserved pre-state-layout drafts; no longer part of the public catalog.
+/data/publishers.jsonl
+/data/places.jsonl
+/data/endpoints.jsonl
+/data/coverage.jsonl
+/schemas/publisher.schema.json
+/schemas/place.schema.json
+/schemas/jurisdiction.schema.json
+/schemas/endpoint.schema.json
+/schemas/coverage.schema.json

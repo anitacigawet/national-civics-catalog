@@ -1,16 +1,7 @@
-# Generated catalog data
+# Catalog data
 
-A valid v1 release writes four deterministic files to `data/`:
+Published records live in `data/states/<code>/sources.jsonl`.
 
-- `publishers.jsonl`
-- `places.jsonl`
-- `endpoints.jsonl`
-- `coverage.jsonl`
+Version 0.1.0 begins with 88 reviewed Arizona sources in `data/states/az/sources.jsonl`. Future states will be added as separate state files. The catalog contains continuing endpoints and their basic metadata, never individual meeting records or application code.
 
-The files are generated from reviewed evidence and validated together. Do not hand-edit them or add placeholders.
-
-## Current release
-
-Version 0.1.0 contains the first normalized v1 snapshot: 88 reviewed Arizona publishers, places, endpoints, and coverage links. The four files validate together and were reproduced byte-for-byte from the reviewed generation path before installation.
-
-This directory remains endpoint-only. It never contains individual meeting records or content, and generated records are not edited by hand.
+Run `python scripts/validate_catalog.py` before publishing any data change.

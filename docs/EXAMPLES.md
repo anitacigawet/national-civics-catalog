@@ -1,61 +1,21 @@
 # Record examples
 
-These examples use reserved example domains and are not release data. Each block shows one line from each v1 file in canonical field order.
+The checked-in Arizona file contains real examples. The records below use fictional names and domains only to explain the shape.
 
-## A municipality publishing its own calendar
-
-`publishers.jsonl`
+## Municipal calendar
 
 ```json
-{"publisher_id":"us-az-example-city","publisher_name":"City of Example","publisher_type":"municipality","country_code":"US","state_codes":["AZ"],"county_names":["Example County"],"official_website_url":"https://www.example.gov/"}
+{"source_id":"us-az-sample-town--meeting-calendar","publisher_name":"Sample Town","publisher_type":"municipality","state_codes":["AZ"],"county_names":["Sample County"],"official_website_url":"https://sampletown.gov","endpoint_type":"meeting_calendar","url":"https://meetings.sampletown.gov/calendar","platform":"custom","access_method":"html","source_relationship":"first_party","status":"working","last_checked":"2026-08-14","provenance_url":"https://sampletown.gov/meetings","covers":[{"name":"Sample Town","type":"municipality","state_codes":["AZ"],"county_names":["Sample County"],"relationship":"direct_jurisdiction","ocd_division_id":null,"census_geoid":null}]}
 ```
 
-`places.jsonl`
+## Community representation
+
+A community council can be recorded as the publisher without calling it a government. Its `covers` relationship is `civic_representation`.
 
 ```json
-{"place_id":"us-az-example-city","place_name":"Example","place_type":"municipality","country_code":"US","state_codes":["AZ"],"county_names":["Example County"],"ocd_division_id":null,"census_geoid":null}
+{"source_id":"us-az-sample-community-council--primary-meeting-source","publisher_name":"Sample Community Council","publisher_type":"community_council","state_codes":["AZ"],"county_names":["Sample County"],"official_website_url":"https://samplecouncil.org","endpoint_type":"primary_meeting_source","url":"https://samplecouncil.org/meetings","platform":"custom","access_method":"html","source_relationship":"first_party","status":"working","last_checked":null,"provenance_url":"https://samplecouncil.org/about","covers":[{"name":"Sample Community","type":"unincorporated_community","state_codes":["AZ"],"county_names":["Sample County"],"relationship":"civic_representation","ocd_division_id":null,"census_geoid":null}]}
 ```
 
-`endpoints.jsonl`
+## Multi-state source
 
-```json
-{"endpoint_id":"us-az-example-city--meeting-calendar","publisher_id":"us-az-example-city","endpoint_type":"meeting_calendar","url":"https://calendar.example.gov/meetings","platform":"custom","access_method":"html","source_relationship":"first_party","verification_status":"verified_working","provenance_url":"https://www.example.gov/meetings","last_verified":"2026-08-13"}
-```
-
-`coverage.jsonl`
-
-```json
-{"coverage_id":"us-az-example-city--meeting-calendar--covers--us-az-example-city","endpoint_id":"us-az-example-city--meeting-calendar","place_id":"us-az-example-city","coverage_relationship":"direct_jurisdiction"}
-```
-
-## A community council representing an unincorporated place
-
-This form records the council as a named civic publisher. It deliberately does not call the council a government or imply legal authority over the place.
-
-`publishers.jsonl`
-
-```json
-{"publisher_id":"us-az-example-community-council","publisher_name":"Example Community Council","publisher_type":"community_council","country_code":"US","state_codes":["AZ"],"county_names":["Example County"],"official_website_url":"https://www.example.gov/"}
-```
-
-`places.jsonl`
-
-```json
-{"place_id":"us-az-example-community","place_name":"Example Community","place_type":"unincorporated_community","country_code":"US","state_codes":["AZ"],"county_names":["Example County"],"ocd_division_id":null,"census_geoid":null}
-```
-
-`endpoints.jsonl`
-
-```json
-{"endpoint_id":"us-az-example-community-council--primary-meeting-source","publisher_id":"us-az-example-community-council","endpoint_type":"primary_meeting_source","url":"https://www.example.gov/meetings","platform":"custom","access_method":"html","source_relationship":"first_party","verification_status":"verified_working","provenance_url":"https://www.example.gov/meetings","last_verified":null}
-```
-
-`coverage.jsonl`
-
-```json
-{"coverage_id":"us-az-example-community-council--primary-meeting-source--covers--us-az-example-community","endpoint_id":"us-az-example-community-council--primary-meeting-source","place_id":"us-az-example-community","coverage_relationship":"civic_representation"}
-```
-
-## Multi-state bodies and places
-
-`state_codes` is an array rather than a single state field. A multi-state Tribal publisher or place can use a sorted value such as `["AZ","NM","UT"]`. Its assigned key does not need a state component; `us-navajo-nation-council` is a valid key shape. Publication still requires evidence for the actual publisher, endpoint, place, and coverage relationship.
+A source spanning Arizona, New Mexico, and Utah uses `"state_codes":["AZ","NM","UT"]` and is stored once in `data/states/az/sources.jsonl`.

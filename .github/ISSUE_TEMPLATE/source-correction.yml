@@ -1,5 +1,5 @@
 name: Add or correct a continuing civic source
-description: Report factual evidence about a publisher, place, endpoint, or coverage relationship.
+description: Report a new, moved, broken, or incorrectly described public meeting source.
 title: "Source: "
 labels:
   - source-review
@@ -26,8 +26,10 @@ body:
         - Tribal government
         - Tribal chapter
         - Community council
+        - School district
         - Special district
-        - Other public body
+        - Civic body
+        - Other
     validations:
       required: true
   - type: input
@@ -45,11 +47,12 @@ body:
       options:
         - Primary meeting source
         - Meeting calendar
-        - Meeting documents index
         - Agenda index
         - Minutes index
         - Public notices index
         - Video archive
+        - API
+        - Feed
         - Other collection-level source
     validations:
       required: true
@@ -84,7 +87,9 @@ body:
       label: How does the publisher relate to the covered place?
       options:
         - Direct jurisdiction
+        - Governing parent
         - Civic representation by a community council
+        - Regional service
     validations:
       required: true
   - type: textarea

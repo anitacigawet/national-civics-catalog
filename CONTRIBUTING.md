@@ -1,30 +1,31 @@
 # Contributing
 
-Thank you for helping make continuing civic meeting sources easier to find.
+Thank you for helping people find public meeting sources.
 
 ## Report a source or correction
 
-Use the source-correction issue form and provide factual evidence for:
+Open a source-correction issue and include:
 
-- the publisher's public name and type;
-- the place or places the source covers;
-- the collection-level endpoint URL and type;
-- whether the source is first-party or an authorized service;
-- the first-party page that establishes that relationship; and
-- what is missing, moved, or incorrect.
+- the state and place the source covers;
+- the publisher's public name;
+- the continuing calendar, portal, feed, or index URL;
+- what is missing, moved, broken, or incorrect; and
+- a first-party page supporting the change when one is available.
 
-A `community_council` can be reported as a named civic publisher without claiming it is a government. Inclusion does not establish governmental status, authority over a place, endorsement, or legal sufficiency.
+Good reports are factual. They do not need to follow the repository's JSON format; a maintainer will review the evidence and update the appropriate state file.
 
-Do not paste agenda text, minutes, transcripts, captions, recordings, personal information, or other meeting content into an issue. Do not submit one meeting's page, document, or recording. Do not submit parser recipes, credentials, non-public API details, screenshots, third-party prose, or unpublished collection notes.
+Do not submit meeting text, transcripts, recordings, personal information, credentials, parser code, or private research notes. Do not submit a link that covers only one meeting or one downloadable document.
 
-## Generated records
+## Data rules
 
-All four JSONL files are generated. A maintainer independently checks the evidence and recreates the resulting publisher, place, endpoint, and coverage records. Do not hand-edit generated output.
+- Never guess a publisher, place, relationship, identifier, county, or status.
+- Use `null` when an external identifier or check date is unknown.
+- Use `[]` when county information is unknown or not applicable.
+- Keep one source in one state file. A multi-state source belongs under its alphabetically first state code.
+- Preserve a published `source_id` when a display name or URL changes.
 
-Use `null` for an unknown external identifier or verification date. Use `[]` when counties are explicitly unknown or inapplicable. Never guess a type, relationship, vendor, identifier, or geography merely to fill a field.
+The catalog is validated before publication. See [`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md) for the record fields.
 
-## Pull-request boundary
+## Rights and factual contributions
 
-The repository does not currently accept code, schema, documentation, or generated-data pull requests. This keeps the current copyright and licensor record accurate until a reviewed inbound-rights process exists.
-
-You may report a factual defect without supplying replacement code or prose. A maintainer will investigate and independently implement any change.
+Please submit factual source information rather than copied third-party prose, screenshots, or code. A maintainer independently writes the catalog change so the repository's ownership and licensing record stays clear.
