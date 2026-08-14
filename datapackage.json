@@ -3,7 +3,7 @@
   "title": "National Civics Catalog",
   "profile": "data-package",
   "version": "0.1.0",
-  "description": "A state-by-state directory of public meeting calendars and source endpoints across the United States.",
+  "description": "A state-by-state directory and Census-shaped contribution roster for public meeting calendars and source endpoints across the United States.",
   "homepage": "https://github.com/anitacigawet/national-civics-catalog",
   "licenses": [
     {
@@ -14,9 +14,9 @@
   ],
   "resources": [
     {
-      "name": "arizona-sources",
-      "title": "Arizona public meeting sources",
-      "path": "data/states/az/sources.jsonl",
+      "name": "state-source-files",
+      "title": "State and territory public meeting source files",
+      "path": "data/states/*/sources.jsonl",
       "format": "jsonl",
       "mediatype": "application/x-ndjson",
       "schema": "schemas/source.schema.json"

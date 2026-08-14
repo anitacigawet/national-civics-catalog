@@ -8,7 +8,9 @@ It contains source links and basic metadata. It does **not** contain meeting rec
 
 ## Current coverage
 
-The catalog starts with **88 reviewed Arizona sources**. Every U.S. state, the District of Columbia, and the five inhabited territories has a folder ready for contributors. Additional source lists are added as they are researched and checked.
+The catalog starts with **38,705 preformed source records** across every U.S. state, the District of Columbia, and the five inhabited territories. **88 Arizona records already contain reviewed sources.** The remaining records identify an active general-purpose government and leave the endpoint fields explicitly unfilled for a contributor and their AI assistant.
+
+The starting shape comes from the U.S. Census Bureau's 2022 Government Units Listing. It covers state, county, municipal, and township governments. It is a practical foundation, not a claim that every Tribal government, civic body, unincorporated community, or newer government is already represented; those can be added with evidence.
 
 Data is organized by state:
 
@@ -18,10 +20,10 @@ data/
     az/
       sources.jsonl
     ny/
-      README.md
+      sources.jsonl
 ```
 
-Each line in a state file is one continuing source, such as a calendar, agenda index, public-notices page, feed, or meeting portal. A record also identifies the publisher, the place or places it covers, when it was last checked, and whether it was working, empty, blocked, broken, moved, retired, or not yet verified.
+Each line in a state file is one source slot. A reviewed record identifies a continuing calendar, agenda index, public-notices page, feed, or meeting portal. A preformed record has the same shape, but its endpoint fields are `null` and its status is `needs_source`. A contributor fills that record instead of inventing the government identity or JSON structure from scratch.
 
 Multi-state sources are stored once under the alphabetically first state code in the record. For example, a source covering Arizona, New Mexico, and Utah lives under `data/states/az/`.
 
@@ -40,7 +42,7 @@ The validator uses only the Python standard library. [`schemas/source.schema.jso
 
 ## Help build a state
 
-Open any state folder under [`data/states/`](data/states/) to see its current coverage. Each folder includes a short contribution path designed to work with an AI coding assistant. The assistant prepares one source record and one evidence packet; the repository's trusted base-branch checker validates the exact pull-request shape and catalog output before a person reviews it.
+Open any state folder under [`data/states/`](data/states/), search `sources.jsonl` for your government, and give the record plus the contribution instructions to an AI coding assistant. The assistant fills one source slot and prepares one evidence packet; the repository's trusted base-branch checker validates the exact pull-request shape and catalog output before a person reviews it.
 
 Start with [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md). The checker never executes code from an incoming pull request, never merges a contribution, and never publishes anything to Z-SPAN.
 
@@ -65,7 +67,7 @@ Within three days of an accepted catalog contribution, Z-SPAN will add the contr
 - a working parser and usable meeting shelf; or
 - a visible source-blocked status explaining why the official endpoint cannot yet be collected and what happens next.
 
-This response applies after the contribution is merged into National Civics Catalog. It does not promise that a broken or access-blocked government source can be made collectable. Once a meeting is available, people can use the Z-SPAN client with their own supported account to process it locally.
+This response applies after the contribution is merged into National Civics Catalog. It does not promise that a broken or access-blocked government source can be made collectable. Once a meeting is available, people can use the Z-SPAN client with their own supported account to process it. The official client sends the generated transcript and outputs to Z-SPAN's private intake for verification and possible later inclusion; nothing is published automatically.
 
 ## License
 

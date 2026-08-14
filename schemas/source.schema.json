@@ -60,28 +60,49 @@
       ]
     },
     "endpoint_type": {
-      "enum": [
-        "primary_meeting_source",
-        "meeting_calendar",
-        "agenda_index",
-        "minutes_index",
-        "public_notices_index",
-        "video_archive",
-        "api",
-        "feed",
-        "other"
+      "anyOf": [
+        { "type": "null" },
+        {
+          "enum": [
+            "primary_meeting_source",
+            "meeting_calendar",
+            "agenda_index",
+            "minutes_index",
+            "public_notices_index",
+            "video_archive",
+            "api",
+            "feed",
+            "other"
+          ]
+        }
       ]
     },
-    "url": { "type": "string", "pattern": "^https://", "maxLength": 2048 },
-    "platform": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "url": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^https://", "maxLength": 2048 }
+      ]
+    },
+    "platform": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "minLength": 1, "maxLength": 100 }
+      ]
+    },
     "access_method": {
-      "enum": ["html", "json", "rss", "ical", "api", "pdf_index", "other"]
+      "anyOf": [
+        { "type": "null" },
+        { "enum": ["html", "json", "rss", "ical", "api", "pdf_index", "other"] }
+      ]
     },
     "source_relationship": {
-      "enum": ["first_party", "authorized_service"]
+      "anyOf": [
+        { "type": "null" },
+        { "enum": ["first_party", "authorized_service"] }
+      ]
     },
     "status": {
-      "enum": ["working", "empty", "blocked", "broken", "moved", "retired", "unverified"]
+      "enum": ["needs_source", "working", "empty", "blocked", "broken", "moved", "retired", "unverified"]
     },
     "last_checked": {
       "anyOf": [
@@ -96,6 +117,30 @@
       "items": { "$ref": "#/$defs/coveredPlace" }
     }
   },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "needs_source" } } },
+      "then": {
+        "properties": {
+          "endpoint_type": { "const": null },
+          "url": { "const": null },
+          "platform": { "const": null },
+          "access_method": { "const": null },
+          "source_relationship": { "const": null },
+          "last_checked": { "const": null }
+        }
+      },
+      "else": {
+        "properties": {
+          "endpoint_type": { "type": "string" },
+          "url": { "type": "string" },
+          "platform": { "type": "string" },
+          "access_method": { "type": "string" },
+          "source_relationship": { "type": "string" }
+        }
+      }
+    }
+  ],
   "$defs": {
     "coveredPlace": {
       "type": "object",

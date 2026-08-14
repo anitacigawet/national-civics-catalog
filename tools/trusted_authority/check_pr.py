@@ -18,6 +18,14 @@ PACKET_RE = re.compile(
 )
 PACKET_FIELDS = ("schema_version", "change_kind", "contributor", "source", "evidence_notes")
 CONTRIBUTOR_FIELDS = ("github_login", "ai_tools", "reviewed_by_contributor")
+FILL_IDENTITY_FIELDS = (
+    "source_id",
+    "publisher_name",
+    "publisher_type",
+    "state_codes",
+    "county_names",
+    "covers",
+)
 
 
 class ContributionError(ValueError):
@@ -121,8 +129,8 @@ def validate_transition(
         raise ContributionError(f"contribution fields must be exactly {list(PACKET_FIELDS)} in that order")
     if packet["schema_version"] != "national-civics-catalog.contribution.v1":
         raise ContributionError("unsupported contribution schema_version")
-    if packet["change_kind"] not in {"add", "correct"}:
-        raise ContributionError("change_kind must be add or correct")
+    if packet["change_kind"] not in {"fill", "add", "correct"}:
+        raise ContributionError("change_kind must be fill, add, or correct")
     contributor = packet["contributor"]
     if not isinstance(contributor, dict) or tuple(contributor) != CONTRIBUTOR_FIELDS:
         raise ContributionError(f"contributor fields must be exactly {list(CONTRIBUTOR_FIELDS)} in that order")
@@ -151,7 +159,20 @@ def validate_transition(
     )
     if changed_ids != [source_id]:
         raise ContributionError(f"canonical state file must change exactly source_id {source_id}")
-    if packet["change_kind"] == "add":
+    if packet["change_kind"] == "fill":
+        before = base_records.get(source_id)
+        if before is None or len(candidate_records) != len(base_records):
+            raise ContributionError("fill contribution must replace exactly one existing source")
+        if before.get("status") != "needs_source":
+            raise ContributionError("fill contribution must start from a needs_source record")
+        if source.get("status") == "needs_source":
+            raise ContributionError("fill contribution must provide a reviewed endpoint status")
+        changed_identity = [field for field in FILL_IDENTITY_FIELDS if before.get(field) != source.get(field)]
+        if changed_identity:
+            raise ContributionError(
+                "fill contribution cannot change preformed identity fields: " + ", ".join(changed_identity)
+            )
+    elif packet["change_kind"] == "add":
         if source_id in base_records or len(candidate_records) != len(base_records) + 1:
             raise ContributionError("add contribution must introduce exactly one new source")
     elif source_id not in base_records or len(candidate_records) != len(base_records):

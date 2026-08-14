@@ -1,5 +1,5 @@
 # Missouri
 
-This folder is ready for its first reviewed source contribution.
+`sources.jsonl` contains **1333 preformed source records**: **0 reviewed** and **1333 still needing a meeting source**. Empty endpoint fields are intentional. The starting roster comes from active general-purpose governments in the 2022 Census of Governments; it does not claim that every local civic body is already represented.
 
-To help build this state or territory, give your AI coding assistant [the contribution instructions](../../../contribute/AI-INSTRUCTIONS.md). Contributions add or correct one continuing public meeting source at a time and are checked before human review.
+Choose the record for your area, then give your AI coding assistant [the contribution instructions](../../../contribute/AI-INSTRUCTIONS.md). The contribution fills that record with one continuing public meeting source and an evidence packet; it does not collect meetings or parser code.

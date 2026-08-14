@@ -1,6 +1,6 @@
 {
   "schema_version": "national-civics-catalog.contribution.v1",
-  "change_kind": "add",
+  "change_kind": "fill",
   "contributor": {
     "github_login": "example-contributor",
     "ai_tools": ["example-ai-assistant"],
