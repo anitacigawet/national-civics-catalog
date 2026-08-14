@@ -1,4 +1,4 @@
-# Civic Source Catalog
+# National Civics Catalog
 
 **A state-by-state directory of public meeting calendars and source endpoints across the United States.**
 
@@ -8,7 +8,7 @@ It contains source links and basic metadata. It does **not** contain meeting rec
 
 ## Current coverage
 
-The catalog starts with **88 reviewed Arizona sources**. Additional states will be added as their source lists are researched and checked.
+The catalog starts with **88 reviewed Arizona sources**. Every U.S. state, the District of Columbia, and the five inhabited territories has a folder ready for contributors. Additional source lists are added as they are researched and checked.
 
 Data is organized by state:
 
@@ -18,7 +18,7 @@ data/
     az/
       sources.jsonl
     ny/
-      sources.jsonl
+      README.md
 ```
 
 Each line in a state file is one continuing source, such as a calendar, agenda index, public-notices page, feed, or meeting portal. A record also identifies the publisher, the place or places it covers, when it was last checked, and whether it was working, empty, blocked, broken, moved, retired, or not yet verified.
@@ -38,6 +38,12 @@ python -m unittest discover -s tests -v
 
 The validator uses only the Python standard library. [`schemas/source.schema.json`](schemas/source.schema.json) describes the record shape, and [`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md) explains each field.
 
+## Help build a state
+
+Open any state folder under [`data/states/`](data/states/) to see its current coverage. Each folder includes a short contribution path designed to work with an AI coding assistant. The assistant prepares one source record and one evidence packet; the repository's trusted base-branch checker validates the exact pull-request shape and catalog output before a person reviews it.
+
+Start with [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md). The checker never executes code from an incoming pull request, never merges a contribution, and never publishes anything to Z-SPAN.
+
 ## Report a correction
 
 Open a source-correction issue when a link moves, breaks, changes platform, or needs better publisher or coverage information. Please provide a first-party page that supports the correction when possible.
@@ -48,9 +54,18 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`docs/BOUNDARY.md`](docs/BOUNDARY.
 
 ## Relationship to Z-SPAN
 
-[Z-SPAN](https://zspan.org) is a separate application that turns civic meeting sources into a public virtual library. Z-SPAN keeps its parser implementations in the Z-SPAN repository. This catalog remains useful on its own to anyone building a different civic project, analysis, map, archive, or tool.
+[Z-SPAN](https://zspan.org) is a separate application that turns civic meeting sources into a public virtual library. Z-SPAN keeps its parser implementations in the Z-SPAN repository. National Civics Catalog remains useful on its own to anyone building a different civic project, analysis, map, archive, or tool.
 
-There is no automatic synchronization between the two repositories. Catalog updates are published as reviewed state-by-state changes.
+There is no automatic synchronization between the two repositories. After a catalog contribution is reviewed and merged, Z-SPAN manually brings the endpoint into its own project, writes and verifies the parser, and updates the location's shelf.
+
+### Z-SPAN three-day response
+
+Within three days of an accepted catalog contribution, Z-SPAN will add the contributed location with either:
+
+- a working parser and usable meeting shelf; or
+- a visible source-blocked status explaining why the official endpoint cannot yet be collected and what happens next.
+
+This response applies after the contribution is merged into National Civics Catalog. It does not promise that a broken or access-blocked government source can be made collectable. Once a meeting is available, people can use the Z-SPAN client with their own supported account to process it locally.
 
 ## License
 

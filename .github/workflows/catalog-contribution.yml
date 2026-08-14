@@ -1,0 +1,45 @@
+name: Catalog contribution check
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-contribution-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  catalog-contribution:
+    name: Trusted catalog contribution
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out trusted base code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted-base
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out incoming files as untrusted data
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: incoming
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Validate contribution with trusted base checker
+        env:
+          CATALOG_PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: >-
+          python trusted-base/tools/trusted_authority/check_pr.py
+          --base-root trusted-base
+          --candidate-root incoming
+          --author "$CATALOG_PR_AUTHOR"
+          --summary "$GITHUB_STEP_SUMMARY"

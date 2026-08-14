@@ -2,6 +2,14 @@
 
 Thank you for helping people find public meeting sources.
 
+## Add a source with an AI assistant
+
+Open the folder for your state under [`data/states/`](data/states/) and give your AI coding assistant [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md). A source contribution changes exactly two files: the state's canonical `sources.jsonl` file and one contribution packet under `contributions/`.
+
+The pull-request checker runs trusted code from the repository's base branch and treats all incoming files as untrusted data. Passing the check means the proposed catalog change is structurally consistent and ready for human review; it does not merge the pull request or publish anything to Z-SPAN.
+
+After a contribution is reviewed and merged, the separate Z-SPAN project handles parser creation. Contributors never need to write a parser or modify the Z-SPAN application.
+
 ## Report a source or correction
 
 Open a source-correction issue and include:
@@ -12,7 +20,7 @@ Open a source-correction issue and include:
 - what is missing, moved, broken, or incorrect; and
 - a first-party page supporting the change when one is available.
 
-Good reports are factual. They do not need to follow the repository's JSON format; a maintainer will review the evidence and update the appropriate state file.
+Good issue reports are factual. They do not need to follow the repository's JSON format; a maintainer or contributor can turn the evidence into a checked pull request.
 
 Do not submit meeting text, transcripts, recordings, personal information, credentials, parser code, or private research notes. Do not submit a link that covers only one meeting or one downloadable document.
 

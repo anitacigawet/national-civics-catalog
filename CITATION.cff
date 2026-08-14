@@ -1,13 +1,13 @@
 cff-version: 1.2.0
 message: "If this source catalog helped your work, please cite it using this metadata."
-title: "Civic Source Catalog"
+title: "National Civics Catalog"
 type: dataset
 version: "0.1.0"
 authors:
   - family-names: "Jones"
     given-names: "James"
 license: PolyForm-Noncommercial-1.0.0
-repository-code: "https://github.com/anitacigawet/civic-source-catalog"
+repository-code: "https://github.com/anitacigawet/national-civics-catalog"
 abstract: "A state-by-state directory of public meeting calendars and source endpoints across the United States."
 keywords:
   - civic-data

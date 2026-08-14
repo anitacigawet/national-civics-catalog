@@ -1,6 +1,6 @@
 # Catalog boundary
 
-The Civic Source Catalog contains **continuing public meeting sources**.
+National Civics Catalog contains **continuing public meeting sources**.
 
 A source belongs when the same URL helps someone find more than one meeting or public record over time. Examples include a meeting calendar, agenda or minutes index, public-notices page, video archive, RSS feed, iCalendar feed, or public meeting API.
 

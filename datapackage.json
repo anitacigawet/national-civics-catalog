@@ -1,10 +1,10 @@
 {
-  "name": "civic-source-catalog",
-  "title": "Civic Source Catalog",
+  "name": "national-civics-catalog",
+  "title": "National Civics Catalog",
   "profile": "data-package",
   "version": "0.1.0",
   "description": "A state-by-state directory of public meeting calendars and source endpoints across the United States.",
-  "homepage": "https://github.com/anitacigawet/civic-source-catalog",
+  "homepage": "https://github.com/anitacigawet/national-civics-catalog",
   "licenses": [
     {
       "name": "PolyForm-Noncommercial-1.0.0",

@@ -1,4 +1,4 @@
-"""Validate the state-organized Civic Source Catalog without dependencies."""
+"""Validate the state-organized National Civics Catalog without dependencies."""
 
 from __future__ import annotations
 
