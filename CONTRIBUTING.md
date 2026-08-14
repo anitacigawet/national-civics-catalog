@@ -4,9 +4,11 @@ Thank you for helping people find public meeting sources.
 
 ## Fill a source record with an AI assistant
 
-Open the folder for your state under [`data/states/`](data/states/), find your government in `sources.jsonl`, and give that preformed record plus [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md) to your AI coding assistant. The assistant fills the missing endpoint fields. A source contribution changes exactly two files: the state's canonical `sources.jsonl` file and one contribution packet under `contributions/`.
+Open the folder for your state under [`data/states/`](data/states/), find your government in `sources.jsonl`, and give that preformed record plus [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md) to the AI assistant you already use. It will ask a few ordinary questions, research the continuing source with your permission, and prepare the submission. You do not need to edit JSON yourself.
 
-The pull-request checker runs trusted code from the repository's base branch and treats all incoming files as untrusted data. Passing the check means the proposed catalog change is structurally consistent and ready for human review; it does not merge the pull request or publish anything to Z-SPAN.
+If Git and GitHub CLI are available, the assistant can prepare the two changed files, run the checks, and open a pull request after showing you the result and receiving your confirmation. If they are unavailable, the assistant prepares a plain-language report for the [**Add or correct a continuing civic source** browser form](https://github.com/anitacigawet/national-civics-catalog/issues/new?template=source-correction.yml). A maintainer then turns that report into the same checked pull-request shape. Installing developer tools is not required.
+
+The pull-request checker runs trusted code from the repository's base branch and treats all incoming files as untrusted data. Passing the check means the proposed catalog change is structurally consistent and ready for human review; it does not merge the pull request or publish anything to Z-SPAN. Browser-form reports are reviewed and converted into this checked shape before they can enter the catalog.
 
 After a contribution is reviewed and merged, the separate Z-SPAN project handles parser creation. Contributors never need to write a parser or modify the Z-SPAN application.
 

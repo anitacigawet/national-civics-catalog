@@ -42,7 +42,7 @@ The validator uses only the Python standard library. [`schemas/source.schema.jso
 
 ## Help build a state
 
-Open any state folder under [`data/states/`](data/states/), search `sources.jsonl` for your government, and give the record plus the contribution instructions to an AI coding assistant. The assistant fills one source slot and prepares one evidence packet; the repository's trusted base-branch checker validates the exact pull-request shape and catalog output before a person reviews it.
+Open any state folder under [`data/states/`](data/states/), search `sources.jsonl` for your government, and give the record plus the contribution instructions to the AI assistant you already use. It asks a few ordinary questions and prepares the source submission; you do not need to edit JSON yourself. When Git is available it can prepare a pull request after your confirmation. Without Git, it prepares a copy-and-paste report for the [browser form](https://github.com/anitacigawet/national-civics-catalog/issues/new?template=source-correction.yml), and a maintainer converts that report into the same checked pull-request shape.
 
 Start with [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md). The checker never executes code from an incoming pull request, never merges a contribution, and never publishes anything to Z-SPAN.
 
