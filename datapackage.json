@@ -1,0 +1,51 @@
+{
+  "name": "civic-source-catalog",
+  "title": "Civic Source Catalog",
+  "profile": "data-package",
+  "version": "0.1.0",
+  "catalog_schema_version": "v1",
+  "release_status": "initial Arizona snapshot",
+  "description": "A source-available directory of collection-level meeting-information sources published by U.S. local governments, Tribal governments, and named civic bodies.",
+  "homepage": "https://github.com/anitacigawet/civic-source-catalog",
+  "licenses": [
+    {
+      "name": "PolyForm-Noncommercial-1.0.0",
+      "path": "LICENSE",
+      "title": "PolyForm Noncommercial License 1.0.0"
+    }
+  ],
+  "resources": [
+    {
+      "name": "publishers",
+      "title": "Source publishers",
+      "path": "data/publishers.jsonl",
+      "format": "jsonl",
+      "mediatype": "application/x-ndjson",
+      "schema": "schemas/publisher.schema.json"
+    },
+    {
+      "name": "places",
+      "title": "Covered places",
+      "path": "data/places.jsonl",
+      "format": "jsonl",
+      "mediatype": "application/x-ndjson",
+      "schema": "schemas/place.schema.json"
+    },
+    {
+      "name": "endpoints",
+      "title": "Collection-level meeting-information sources",
+      "path": "data/endpoints.jsonl",
+      "format": "jsonl",
+      "mediatype": "application/x-ndjson",
+      "schema": "schemas/endpoint.schema.json"
+    },
+    {
+      "name": "coverage",
+      "title": "Endpoint-to-place coverage",
+      "path": "data/coverage.jsonl",
+      "format": "jsonl",
+      "mediatype": "application/x-ndjson",
+      "schema": "schemas/coverage.schema.json"
+    }
+  ]
+}

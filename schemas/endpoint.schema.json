@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:civic-source-catalog:endpoint:v1",
+  "title": "Civic Source Catalog endpoint",
+  "description": "One collection-level meeting-information source published by or provided as an authorized service for a named publisher.",
+  "type": "object",
+  "required": [
+    "endpoint_id",
+    "publisher_id",
+    "endpoint_type",
+    "url",
+    "platform",
+    "access_method",
+    "source_relationship",
+    "verification_status",
+    "provenance_url",
+    "last_verified"
+  ],
+  "properties": {
+    "endpoint_id": {
+      "type": "string",
+      "pattern": "^us-[a-z0-9]+(?:-[a-z0-9]+)*--[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Assigned stable key scoped to publisher_id."
+    },
+    "publisher_id": {
+      "type": "string",
+      "pattern": "^us-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "endpoint_type": {
+      "type": "string",
+      "enum": [
+        "primary_meeting_source",
+        "meeting_calendar",
+        "meeting_documents_index",
+        "agenda_index",
+        "minutes_index",
+        "public_notices_index",
+        "video_archive",
+        "other"
+      ]
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "maxLength": 4096
+    },
+    "platform": {
+      "type": "string",
+      "minLength": 1
+    },
+    "access_method": {
+      "type": "string",
+      "enum": [
+        "html",
+        "rss",
+        "ical",
+        "json",
+        "xml",
+        "pdf_index",
+        "other"
+      ]
+    },
+    "source_relationship": {
+      "type": "string",
+      "enum": [
+        "first_party",
+        "authorized_service"
+      ],
+      "description": "Whether the source is published directly by the named publisher or supplied as its authorized service."
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified_working",
+        "verified_empty",
+        "source_blocked"
+      ]
+    },
+    "provenance_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://",
+      "maxLength": 4096
+    },
+    "last_verified": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,29 @@
+Civic Source Catalog
+
+Required Notice: Copyright 2026 James Jones
+
+The PolyForm Noncommercial License 1.0.0 applies only to rights the licensor
+owns in catalog software, schemas, documentation, metadata, and any
+protectable selection, coordination, or arrangement. Underlying government
+facts and third-party materials are not licensed by James Jones and remain
+subject to applicable law and their source terms.
+
+Some place records carry identifiers from the Open Civic Data Division
+Identifiers project. Those identifiers remain under that project's CC0 1.0
+public-domain dedication; see THIRD_PARTY_NOTICES.md.
+
+The catalog identifies collection-level sources published by, or provided as
+an authorized service for, named publishers. Inclusion does not establish
+that a publisher is a government, that it has legal authority over a place,
+or that any government, Tribal government, civic body, vendor, or Z-SPAN
+endorses the catalog.
+
+The catalog does not include or license content published at linked
+locations.
+
+The Z-SPAN name, logo, and other marks are not part of this repository. No
+permission is granted to brand a fork as Z-SPAN or imply endorsement.
+Independent forks should use distinct branding; this notice does not
+restrict uses permitted by applicable law.
+
+Z-SPAN is a separate application and is not licensed by this repository.

@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If this source catalog helped your work, please cite it using this metadata."
+title: "Civic Source Catalog"
+type: dataset
+version: "0.1.0"
+authors:
+  - family-names: "Jones"
+    given-names: "James"
+license: PolyForm-Noncommercial-1.0.0
+repository-code: "https://github.com/anitacigawet/civic-source-catalog"
+abstract: "A source-available directory of collection-level meeting-information sources published by U.S. local governments, Tribal governments, and named civic bodies."
+keywords:
+  - civic-data
+  - tribal-government
+  - local-government
+  - public-meetings
+  - source-catalog
