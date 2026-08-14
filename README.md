@@ -4,7 +4,7 @@
 
 The catalog separates three facts that are easy to blur: who publishes or authorizes a source, which continuing source is being described, and what place that source covers. That separation lets one publisher serve several places, one place use several source collections, and a multi-state Tribal government be represented without forcing it into a city-shaped record.
 
-This repository contains endpoints, not meeting records. It does not republish meetings, agendas, minutes, transcripts, recordings, summaries, or the private machinery used to collect them.
+This repository contains endpoints, not meeting records. It does not republish meetings, agendas, minutes, transcripts, recordings, summaries, or the software and operational material used to collect them.
 
 ## The four-file release
 
@@ -36,7 +36,7 @@ A source belongs when the same URL is meant to help someone find multiple meetin
 - an RSS, iCalendar, JSON, or XML collection source; or
 - another continuing meeting-information landing page.
 
-One meeting's page, agenda PDF, minutes file, recording, transcript, or summary does not belong. Collection methods also remain private: no parser recipes, selectors, credentials, health logs, review queues, or unpublished candidates are part of the catalog.
+One meeting's page, agenda PDF, minutes file, recording, transcript, or summary does not belong. Collection implementations belong in the applications that use the catalog: parser recipes, selectors, credentials, health logs, review queues, and unpublished candidates are not part of this repository.
 
 See [the publication boundary](docs/BOUNDARY.md) and [worked record examples](docs/EXAMPLES.md).
 
@@ -57,7 +57,7 @@ The JSON Schemas in `schemas/` describe each record. [`datapackage.json`](datapa
 
 Use the source-correction issue form to provide factual evidence about a publisher, place, endpoint, or coverage relationship. A maintainer checks the evidence and regenerates records; generated JSONL is not edited by hand.
 
-Do not paste meeting content, personal information, copyrighted third-party prose, screenshots, code, or private collection details into an issue. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+Do not paste meeting content, personal information, copyrighted third-party prose, screenshots, code, credentials, or unpublished collection details into an issue. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Repository map
 

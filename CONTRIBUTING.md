@@ -15,7 +15,7 @@ Use the source-correction issue form and provide factual evidence for:
 
 A `community_council` can be reported as a named civic publisher without claiming it is a government. Inclusion does not establish governmental status, authority over a place, endorsement, or legal sufficiency.
 
-Do not paste agenda text, minutes, transcripts, captions, recordings, personal information, or other meeting content into an issue. Do not submit one meeting's page, document, or recording. Do not submit parser recipes, credentials, private API details, screenshots, third-party prose, or unpublished collection notes.
+Do not paste agenda text, minutes, transcripts, captions, recordings, personal information, or other meeting content into an issue. Do not submit one meeting's page, document, or recording. Do not submit parser recipes, credentials, non-public API details, screenshots, third-party prose, or unpublished collection notes.
 
 ## Generated records
 

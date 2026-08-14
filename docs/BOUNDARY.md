@@ -36,4 +36,4 @@ The evidence must support the named relationship. A shared domain, similar name,
 
 Do not add meeting rows, event IDs, agenda text, minutes, transcripts, captions, recordings, quotations, summaries, or generated decisions.
 
-Do not add parser code, selectors, request recipes, credentials, private API details, source-health logs, review notes, operator records, or unpublished candidates. Public records must remain independently understandable from their publisher, endpoint, provenance, place, and coverage entries.
+Do not add parser code, selectors, request recipes, credentials, non-public API details, source-health logs, review notes, operator records, or unpublished candidates. Public records must remain independently understandable from their publisher, endpoint, provenance, place, and coverage entries.
