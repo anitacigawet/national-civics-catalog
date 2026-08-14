@@ -2,9 +2,9 @@
 
 Thank you for helping people find public meeting sources.
 
-## Add a source with an AI assistant
+## Fill a source record with an AI assistant
 
-Open the folder for your state under [`data/states/`](data/states/) and give your AI coding assistant [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md). A source contribution changes exactly two files: the state's canonical `sources.jsonl` file and one contribution packet under `contributions/`.
+Open the folder for your state under [`data/states/`](data/states/), find your government in `sources.jsonl`, and give that preformed record plus [`contribute/AI-INSTRUCTIONS.md`](contribute/AI-INSTRUCTIONS.md) to your AI coding assistant. The assistant fills the missing endpoint fields. A source contribution changes exactly two files: the state's canonical `sources.jsonl` file and one contribution packet under `contributions/`.
 
 The pull-request checker runs trusted code from the repository's base branch and treats all incoming files as untrusted data. Passing the check means the proposed catalog change is structurally consistent and ready for human review; it does not merge the pull request or publish anything to Z-SPAN.
 

@@ -55,10 +55,40 @@ class CatalogValidatorTests(unittest.TestCase):
         )
         return root
 
-    def test_checked_in_arizona_catalog_is_valid(self) -> None:
-        count, errors = validator.validate_catalog(ROOT / "data" / "states")
-        self.assertEqual(88, count)
+    def test_checked_in_national_catalog_is_valid(self) -> None:
+        count, errors = validator.validate_catalog(
+            ROOT / "data" / "states", require_all_states=True
+        )
+        self.assertGreater(count, 38_000)
         self.assertEqual([], errors)
+
+    def test_preformed_needs_source_record_is_valid(self) -> None:
+        record = _base_record()
+        record.update({
+            "official_website_url": None,
+            "endpoint_type": None,
+            "url": None,
+            "platform": None,
+            "access_method": None,
+            "source_relationship": None,
+            "status": "needs_source",
+            "last_checked": None,
+        })
+        count, errors = validator.validate_catalog(self._write([record]))
+        self.assertEqual(1, count)
+        self.assertEqual([], errors)
+
+    def test_needs_source_record_cannot_carry_endpoint_claims(self) -> None:
+        record = _base_record()
+        record["status"] = "needs_source"
+        _, errors = validator.validate_catalog(self._write([record]))
+        self.assertTrue(any("must be null while status is needs_source" in error for error in errors))
+
+    def test_reviewed_record_requires_endpoint_fields(self) -> None:
+        record = _base_record()
+        record["url"] = None
+        _, errors = validator.validate_catalog(self._write([record]))
+        self.assertTrue(any("url must be" in error for error in errors))
 
     def test_minimal_record_is_valid(self) -> None:
         count, errors = validator.validate_catalog(self._write([_base_record()]))

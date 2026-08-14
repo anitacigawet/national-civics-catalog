@@ -60,7 +60,10 @@ ENDPOINT_TYPES = {
 }
 ACCESS_METHODS = {"html", "json", "rss", "ical", "api", "pdf_index", "other"}
 SOURCE_RELATIONSHIPS = {"first_party", "authorized_service"}
-STATUSES = {"working", "empty", "blocked", "broken", "moved", "retired", "unverified"}
+STATUSES = {
+    "needs_source", "working", "empty", "blocked", "broken", "moved",
+    "retired", "unverified",
+}
 COVERAGE_RELATIONSHIPS = {
     "direct_jurisdiction", "governing_parent", "civic_representation",
     "regional_service",
@@ -253,16 +256,24 @@ def _validate_source(record: OrderedDict[str, Any], label: str, folder_code: str
     official_url = record["official_website_url"]
     if official_url is not None:
         errors += _validate_url(official_url, "official_website_url", label)
-    if record["endpoint_type"] not in ENDPOINT_TYPES:
-        errors.append(f"{label}: unsupported endpoint_type {record['endpoint_type']!r}")
-    errors += _validate_url(record["url"], "url", label)
-    errors += _text(record["platform"], "platform", label)
-    if record["access_method"] not in ACCESS_METHODS:
-        errors.append(f"{label}: unsupported access_method {record['access_method']!r}")
-    if record["source_relationship"] not in SOURCE_RELATIONSHIPS:
-        errors.append(f"{label}: unsupported source_relationship {record['source_relationship']!r}")
     if record["status"] not in STATUSES:
         errors.append(f"{label}: unsupported status {record['status']!r}")
+    if record["status"] == "needs_source":
+        for field in (
+            "endpoint_type", "url", "platform", "access_method",
+            "source_relationship", "last_checked",
+        ):
+            if record[field] is not None:
+                errors.append(f"{label}: {field} must be null while status is needs_source")
+    else:
+        if record["endpoint_type"] not in ENDPOINT_TYPES:
+            errors.append(f"{label}: unsupported endpoint_type {record['endpoint_type']!r}")
+        errors += _validate_url(record["url"], "url", label)
+        errors += _text(record["platform"], "platform", label)
+        if record["access_method"] not in ACCESS_METHODS:
+            errors.append(f"{label}: unsupported access_method {record['access_method']!r}")
+        if record["source_relationship"] not in SOURCE_RELATIONSHIPS:
+            errors.append(f"{label}: unsupported source_relationship {record['source_relationship']!r}")
     checked = record["last_checked"]
     if checked is not None:
         if not isinstance(checked, str):
@@ -296,12 +307,26 @@ def _validate_source(record: OrderedDict[str, Any], label: str, folder_code: str
     return errors
 
 
-def validate_catalog(data_root: Path = DEFAULT_DATA_ROOT) -> tuple[int, list[str]]:
+def validate_catalog(
+    data_root: Path = DEFAULT_DATA_ROOT,
+    *,
+    require_all_states: bool = False,
+) -> tuple[int, list[str]]:
     if not data_root.is_dir():
         return 0, [f"{data_root.as_posix()}: state data directory does not exist"]
     files = sorted(data_root.glob("*/sources.jsonl"), key=lambda path: path.parent.name)
     if not files:
         return 0, [f"{data_root.as_posix()}: no state source files found"]
+    found_codes = {path.parent.name.upper() for path in files}
+    if require_all_states and found_codes != USPS_CODES:
+        missing = sorted(USPS_CODES - found_codes)
+        extra = sorted(found_codes - USPS_CODES)
+        details = []
+        if missing:
+            details.append("missing " + ", ".join(missing))
+        if extra:
+            details.append("unexpected " + ", ".join(extra))
+        return 0, [f"{data_root.as_posix()}: state source inventory is incomplete ({'; '.join(details)})"]
 
     errors: list[str] = []
     source_ids: dict[str, str] = {}
@@ -354,7 +379,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
     args = parser.parse_args(argv)
-    count, errors = validate_catalog(args.data_root)
+    count, errors = validate_catalog(args.data_root, require_all_states=True)
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
