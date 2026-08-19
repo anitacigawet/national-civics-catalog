@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -35,6 +37,31 @@ def packet(record: dict, *, kind: str = "add", login: str = "helper") -> dict:
         },
         "source": record,
         "evidence_notes": "An official page identifies this continuing source.",
+    }
+
+
+def batch_packet(record: dict, *, login: str = "anitacigawet") -> dict:
+    return {
+        "schema_version": "national-civics-catalog.maintainer-batch.v1",
+        "batch_id": "fleet-001",
+        "maintainer": {"github_login": login},
+        "source_bundle_sha256": "a" * 64,
+        "ai_tools": ["Claude Sonnet", "Gemini"],
+        "candidates": [
+            {
+                "state_code": "AZ",
+                "source_id": record["source_id"],
+                "source": record,
+                "evidence": [
+                    {
+                        "url": "https://example.gov/meetings",
+                        "claim": "The official site identifies this as its continuing meetings page.",
+                        "accessed_on": "2026-08-19",
+                    }
+                ],
+                "notes": "Candidate retained as unverified for maintainer review.",
+            }
+        ],
     }
 
 
@@ -95,6 +122,56 @@ class TransitionTests(unittest.TestCase):
             checker.validate_transition(
                 base_records={}, candidate_records={record["source_id"]: record},
                 packet=packet(record, login="someone-else"), author="helper", state="az", source_id=record["source_id"],
+            )
+
+
+class MaintainerBatchTests(unittest.TestCase):
+    def _roots(self, before: dict, after: dict) -> tuple[tempfile.TemporaryDirectory, Path, Path]:
+        temporary = tempfile.TemporaryDirectory()
+        root = Path(temporary.name)
+        base_root = root / "base"
+        candidate_root = root / "candidate"
+        relative = Path("data/states/az/sources.jsonl")
+        (base_root / relative).parent.mkdir(parents=True)
+        (candidate_root / relative).parent.mkdir(parents=True)
+        (base_root / relative).write_text(json.dumps(before, separators=(",", ":")) + "\n", encoding="utf-8")
+        (candidate_root / relative).write_text(
+            json.dumps(after, separators=(",", ":")) + "\n", encoding="utf-8"
+        )
+        return temporary, base_root, candidate_root
+
+    def test_accepts_trusted_unverified_batch_fill(self) -> None:
+        before = source()
+        after = {**before, "status": "unverified", "url": "https://example.gov/meetings"}
+        temporary, base_root, candidate_root = self._roots(before, after)
+        with temporary:
+            count = checker._validate_batch_manifest(
+                packet=batch_packet(after),
+                author="anitacigawet",
+                batch_id="fleet-001",
+                base_root=base_root,
+                candidate_root=candidate_root,
+                state_paths={"az": "data/states/az/sources.jsonl"},
+            )
+        self.assertEqual(count, 1)
+
+    def test_batch_cannot_change_preformed_identity(self) -> None:
+        before = source()
+        after = {
+            **before,
+            "publisher_name": "Different Town",
+            "status": "unverified",
+            "url": "https://example.gov/meetings",
+        }
+        temporary, base_root, candidate_root = self._roots(before, after)
+        with temporary, self.assertRaisesRegex(checker.ContributionError, "publisher_name"):
+            checker._validate_batch_manifest(
+                packet=batch_packet(after),
+                author="anitacigawet",
+                batch_id="fleet-001",
+                base_root=base_root,
+                candidate_root=candidate_root,
+                state_paths={"az": "data/states/az/sources.jsonl"},
             )
 
 
