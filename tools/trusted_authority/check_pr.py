@@ -17,7 +17,7 @@ PACKET_RE = re.compile(
     r"^contributions/(?P<state>[a-z]{2})/(?P<source>[a-z0-9][a-z0-9-]*[a-z0-9])/(?P<author>[a-z0-9-]+)-(?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2})\.json$"
 )
 BATCH_RE = re.compile(
-    r"^batches/(?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2})/(?P<author>[a-z0-9-]+)-(?P<batch>[a-z0-9][a-z0-9-]*[a-z0-9])\.json$"
+    r"^batches/(?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2})/(?P<author>[a-z0-9-]+)__(?P<batch>[a-z0-9][a-z0-9-]*[a-z0-9])\.json$"
 )
 PACKET_FIELDS = ("schema_version", "change_kind", "contributor", "source", "evidence_notes")
 CONTRIBUTOR_FIELDS = ("github_login", "ai_tools", "reviewed_by_contributor")

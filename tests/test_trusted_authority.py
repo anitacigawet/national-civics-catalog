@@ -126,6 +126,15 @@ class TransitionTests(unittest.TestCase):
 
 
 class MaintainerBatchTests(unittest.TestCase):
+    def test_batch_path_separates_author_from_batch_id(self) -> None:
+        match = checker.BATCH_RE.fullmatch(
+            "batches/2026-08-19/anitacigawet__fleet-2026-08-19-01.json"
+        )
+        self.assertIsNotNone(match)
+        assert match is not None
+        self.assertEqual(match.group("author"), "anitacigawet")
+        self.assertEqual(match.group("batch"), "fleet-2026-08-19-01")
+
     def _roots(self, before: dict, after: dict) -> tuple[tempfile.TemporaryDirectory, Path, Path]:
         temporary = tempfile.TemporaryDirectory()
         root = Path(temporary.name)
