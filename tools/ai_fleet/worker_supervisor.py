@@ -104,11 +104,14 @@ def model_command(
             "acceptEdits",
             "--tools",
             "Read,Edit,WebSearch,WebFetch",
+            "--allowedTools",
+            "Read,Edit,WebSearch,WebFetch",
             "--add-dir",
             str(attempt_directory),
             "--output-format",
             "json",
             "--no-session-persistence",
+            "--safe-mode",
         ]
     raise ValueError(f"unsupported provider {provider}")
 
