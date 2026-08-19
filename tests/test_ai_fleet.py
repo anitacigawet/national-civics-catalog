@@ -23,6 +23,9 @@ fleet_module = load_module("ai_fleet_runtime", ROOT / "tools" / "ai_fleet" / "fl
 supervisor_module = load_module(
     "ai_fleet_supervisor", ROOT / "tools" / "ai_fleet" / "worker_supervisor.py"
 )
+promotion_module = load_module(
+    "ai_fleet_promotion", ROOT / "tools" / "ai_fleet" / "promote_candidates.py"
+)
 
 
 def source(state: str, suffix: str, publisher: str) -> dict:
@@ -224,6 +227,55 @@ class FleetTests(unittest.TestCase):
         row = json.loads(output.read_text(encoding="utf-8").strip())
         self.assertEqual(receipt["job_id"], row["job_id"])
         self.assertEqual("unverified", row["source"]["status"])
+
+    def test_promotes_bundle_into_matching_needs_source_record(self) -> None:
+        registered = self.register("claude")
+        agent_id = registered["agent"]["agent_id"]
+        receipt = self.fleet.claim(agent_id)
+        result_path = self.fill_identified_result(receipt)
+        self.fleet.submit(agent_id, receipt["job_id"], result_path)
+        bundle = self.workspace.parent / "promotion-bundle.jsonl"
+        self.fleet.collect(bundle)
+        promotion_receipt = self.workspace.parent / "promotion-receipt.json"
+        summary = promotion_module.promote_candidates(
+            bundle=bundle,
+            catalog_root=self.catalog,
+            receipt=promotion_receipt,
+            apply=True,
+        )
+        self.assertEqual(1, summary["promoted_count"])
+        self.assertEqual(0, summary["skipped_identical_count"])
+        promoted = json.loads(
+            (self.catalog / "data" / "states" / "ca" / "sources.jsonl")
+            .read_text(encoding="utf-8")
+            .splitlines()[0]
+        )
+        self.assertEqual("us-ca-alpha--primary-meeting-source", promoted["source_id"])
+        self.assertEqual("unverified", promoted["status"])
+        self.assertEqual("https://www.cityofpasadena.net/commissions/meetings/", promoted["url"])
+        self.assertTrue(promotion_receipt.is_file())
+
+    def test_promotion_rejects_identity_changes_without_writing(self) -> None:
+        registered = self.register("gemini")
+        agent_id = registered["agent"]["agent_id"]
+        receipt = self.fleet.claim(agent_id)
+        result_path = self.fill_identified_result(receipt)
+        self.fleet.submit(agent_id, receipt["job_id"], result_path)
+        bundle = self.workspace.parent / "tampered-bundle.jsonl"
+        self.fleet.collect(bundle)
+        row = json.loads(bundle.read_text(encoding="utf-8"))
+        row["source"]["publisher_name"] = "Different Publisher"
+        bundle.write_text(json.dumps(row) + "\n", encoding="utf-8")
+        state_path = self.catalog / "data" / "states" / "ca" / "sources.jsonl"
+        before = state_path.read_text(encoding="utf-8")
+        with self.assertRaisesRegex(promotion_module.PromotionError, "identity fields changed"):
+            promotion_module.promote_candidates(
+                bundle=bundle,
+                catalog_root=self.catalog,
+                receipt=self.workspace.parent / "rejected-receipt.json",
+                apply=True,
+            )
+        self.assertEqual(before, state_path.read_text(encoding="utf-8"))
 
     def test_engine_or_queue_tampering_fails_loud(self) -> None:
         queue_path = next((self.workspace / "work_orders").glob("*/queue.json"))
