@@ -297,6 +297,12 @@ class Fleet:
         expected_engine = self.manifest.get("engine_sha256")
         if not isinstance(expected_engine, str) or sha256_file(Path(__file__).resolve()) != expected_engine:
             raise FleetError("fleet engine hash differs from the pinned workspace engine")
+        supervisor_path = self.root / "engine" / "worker_supervisor.py"
+        expected_supervisor = self.manifest.get("supervisor_sha256")
+        if not isinstance(expected_supervisor, str) or not supervisor_path.is_file():
+            raise FleetError("pinned worker supervisor is missing")
+        if sha256_file(supervisor_path) != expected_supervisor:
+            raise FleetError("worker supervisor hash differs from the pinned workspace supervisor")
         orders = self.manifest.get("work_orders")
         if not isinstance(orders, list) or not orders:
             raise FleetError("workspace has no work orders")
@@ -478,10 +484,15 @@ class Fleet:
         return result
 
     def command(self, action: str, *parts: str) -> str:
-        python = self.manifest.get("python_command") or sys.executable
-        engine = self.root / "engine" / "fleet.py"
-        quoted = [f'"{python}"', "-B", f'"{engine}"', "--workspace", f'"{self.root}"', action]
-        quoted.extend(f'"{part}"' if any(char.isspace() for char in part) else part for part in parts)
+        python = str(self.manifest.get("python_command") or sys.executable).replace("\\", "/")
+        engine = (self.root / "engine" / "fleet.py").as_posix()
+        workspace = self.root.as_posix()
+        quoted = [python, "-B", engine, "--workspace", workspace, action]
+        normalized_parts = [part.replace("\\", "/") for part in parts]
+        quoted.extend(
+            f'"{part}"' if any(char.isspace() for char in part) else part
+            for part in normalized_parts
+        )
         return " ".join(quoted)
 
     def work_state(self, order_id: str) -> dict[str, Any]:

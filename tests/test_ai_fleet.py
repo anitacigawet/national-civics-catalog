@@ -20,6 +20,9 @@ def load_module(name: str, path: Path):
 
 builder = load_module("ai_fleet_builder", ROOT / "tools" / "ai_fleet" / "build_workspace.py")
 fleet_module = load_module("ai_fleet_runtime", ROOT / "tools" / "ai_fleet" / "fleet.py")
+supervisor_module = load_module(
+    "ai_fleet_supervisor", ROOT / "tools" / "ai_fleet" / "worker_supervisor.py"
+)
 
 
 def source(state: str, suffix: str, publisher: str) -> dict:
@@ -136,6 +139,10 @@ class FleetTests(unittest.TestCase):
         text = (self.workspace / "AI_START_HERE.md").read_text(encoding="utf-8")
         self.assertIn("one canonical entry point", text)
         self.assertIn("New York is excluded", text)
+        self.assertIn("C:/", text)
+        self.assertNotIn('"python" -B', text)
+        self.assertTrue((self.workspace / "GEMINI_FLEET_POLICY.toml").is_file())
+        self.assertTrue((self.workspace / "engine" / "worker_supervisor.py").is_file())
         manifest = json.loads((self.workspace / "fleet_manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(["NY"], manifest["excluded_states"])
         self.assertNotIn("NY", {item["state_code"] for item in manifest["work_orders"]})
@@ -223,6 +230,25 @@ class FleetTests(unittest.TestCase):
         queue_path.write_text(queue_path.read_text(encoding="utf-8") + " ", encoding="utf-8")
         with self.assertRaisesRegex(fleet_module.FleetError, "queue hash changed"):
             self.fleet.verify_integrity(full=True)
+
+    def test_supervisor_gives_models_no_terminal_work(self) -> None:
+        registered = self.register("gemini")
+        receipt = self.fleet.claim(registered["agent"]["agent_id"])
+        prompt = supervisor_module.research_prompt(receipt)
+        self.assertIn("Do not use a terminal", prompt)
+        self.assertIn("first_party or authorized_service", prompt)
+        self.assertIn("url, tool, outcome, observed_at", prompt)
+        self.assertIn(Path(receipt["result_path"]).as_posix(), prompt)
+        command = supervisor_module.model_command(
+            provider="gemini",
+            executable=Path("agy.exe"),
+            model="gemini-3.1-pro-high",
+            prompt=prompt,
+            attempt_directory=Path(receipt["result_path"]).parent,
+            timeout="20m",
+        )
+        self.assertIn("--sandbox", command)
+        self.assertNotIn("--dangerously-skip-permissions", command)
 
 
 if __name__ == "__main__":
