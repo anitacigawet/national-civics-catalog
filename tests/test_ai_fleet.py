@@ -262,7 +262,20 @@ class FleetTests(unittest.TestCase):
                 '{"api_error_status":429,"result":"You have hit your session limit"}', ""
             )
         )
+        self.assertTrue(
+            supervisor_module.quota_exhausted(
+                "Individual quota reached. Resets in 3h34m50s.", ""
+            )
+        )
         self.assertFalse(supervisor_module.quota_exhausted("authentication expired", ""))
+
+    def test_supervisor_recognizes_denied_terminal_attempts(self) -> None:
+        message = (
+            'permission check failed for command "curl example": '
+            "user denied permission to run command"
+        )
+        self.assertTrue(supervisor_module.forbidden_tool_attempted(message, ""))
+        self.assertFalse(supervisor_module.forbidden_tool_attempted("network unavailable", ""))
 
     def test_claude_command_preapproves_only_bounded_tools(self) -> None:
         command = supervisor_module.model_command(

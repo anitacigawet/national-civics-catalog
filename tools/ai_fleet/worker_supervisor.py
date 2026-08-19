@@ -137,7 +137,16 @@ def quota_exhausted(stdout: str, stderr: str) -> bool:
             "rate limit exceeded",
             "hit your session limit",
             '"api_error_status":429',
+            "individual quota reached",
         )
+    )
+
+
+def forbidden_tool_attempted(stdout: str, stderr: str) -> bool:
+    combined = f"{stdout}\n{stderr}".casefold()
+    return (
+        "permission check failed for command" in combined
+        and "user denied permission to run command" in combined
     )
 
 
@@ -170,6 +179,7 @@ def run_worker(args: argparse.Namespace) -> int:
                 timeout=args.model_timeout,
             )
             quota_retry = 0
+            denied_tool_retry = 0
             while True:
                 process = subprocess.run(
                     command,
@@ -197,6 +207,18 @@ def run_worker(args: argparse.Namespace) -> int:
                         f"WAIT quota job={receipt['job_id']} retry={quota_retry} seconds={args.quota_retry_seconds}",
                     )
                     time.sleep(args.quota_retry_seconds)
+                    continue
+                if (
+                    args.continuous
+                    and forbidden_tool_attempted(process.stdout, process.stderr)
+                    and denied_tool_retry < 2
+                ):
+                    denied_tool_retry += 1
+                    append_log(
+                        summary_path,
+                        f"RETRY denied_tool job={receipt['job_id']} retry={denied_tool_retry}",
+                    )
+                    time.sleep(5)
                     continue
                 append_log(
                     summary_path,
