@@ -250,6 +250,29 @@ class FleetTests(unittest.TestCase):
         self.assertIn("--sandbox", command)
         self.assertNotIn("--dangerously-skip-permissions", command)
 
+    def test_supervisor_recognizes_only_explicit_quota_failures(self) -> None:
+        self.assertTrue(
+            supervisor_module.quota_exhausted(
+                '{"error":"RESOURCE_EXHAUSTED: Resource has been exhausted"}', ""
+            )
+        )
+        self.assertTrue(supervisor_module.quota_exhausted("", "Quota exceeded; retry later"))
+        self.assertFalse(supervisor_module.quota_exhausted("authentication expired", ""))
+
+    def test_claude_command_preapproves_only_bounded_tools(self) -> None:
+        command = supervisor_module.model_command(
+            provider="claude",
+            executable=Path("claude.exe"),
+            model="sonnet",
+            prompt="bounded task",
+            attempt_directory=Path("attempts"),
+            timeout="20m",
+        )
+        self.assertIn("--allowedTools", command)
+        self.assertIn("Read,Edit,WebSearch,WebFetch", command)
+        self.assertNotIn("Bash", command)
+        self.assertIn("--safe-mode", command)
+
 
 if __name__ == "__main__":
     unittest.main()

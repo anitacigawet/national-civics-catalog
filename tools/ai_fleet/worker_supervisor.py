@@ -14,6 +14,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import time
 from typing import Any
 
 
@@ -124,6 +125,20 @@ def append_log(path: Path, text: str) -> None:
             handle.write("\n")
 
 
+def quota_exhausted(stdout: str, stderr: str) -> bool:
+    combined = f"{stdout}\n{stderr}".casefold()
+    return any(
+        marker in combined
+        for marker in (
+            "resource_exhausted",
+            "resource has been exhausted",
+            "quota exceeded",
+            "quota exhausted",
+            "rate limit exceeded",
+        )
+    )
+
+
 def run_worker(args: argparse.Namespace) -> int:
     workspace = args.workspace.resolve()
     runtime = load_fleet_module(workspace)
@@ -135,7 +150,7 @@ def run_worker(args: argparse.Namespace) -> int:
     summary_path = logs / "supervisor.log"
     completed = 0
     append_log(summary_path, f"START provider={args.provider} model={args.model} agent={args.agent_id}")
-    while completed < args.max_jobs:
+    while args.continuous or completed < args.max_jobs:
         receipt = fleet.claim(args.agent_id)
         if receipt.get("fleet_exhausted"):
             append_log(summary_path, "STOP fleet_exhausted")
@@ -152,22 +167,35 @@ def run_worker(args: argparse.Namespace) -> int:
                 attempt_directory=result_path.parent,
                 timeout=args.model_timeout,
             )
-            process = subprocess.run(
-                command,
-                cwd=result_path.parent,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=args.process_timeout_seconds,
-                check=False,
-            )
-            stem = f"{completed + 1:03d}-{receipt['job_id']}--run-{correction_number + 1:02d}"
-            append_log(logs / f"{stem}.stdout.log", process.stdout)
-            append_log(logs / f"{stem}.stderr.log", process.stderr)
-            if process.returncode != 0:
+            quota_retry = 0
+            while True:
+                process = subprocess.run(
+                    command,
+                    cwd=result_path.parent,
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    timeout=args.process_timeout_seconds,
+                    check=False,
+                )
+                stem = f"{completed + 1:03d}-{receipt['job_id']}--run-{correction_number + 1:02d}"
+                if quota_retry:
+                    stem += f"--quota-retry-{quota_retry:03d}"
+                append_log(logs / f"{stem}.stdout.log", process.stdout)
+                append_log(logs / f"{stem}.stderr.log", process.stderr)
+                if process.returncode == 0:
+                    break
+                if args.continuous and quota_exhausted(process.stdout, process.stderr):
+                    quota_retry += 1
+                    append_log(
+                        summary_path,
+                        f"WAIT quota job={receipt['job_id']} retry={quota_retry} seconds={args.quota_retry_seconds}",
+                    )
+                    time.sleep(args.quota_retry_seconds)
+                    continue
                 append_log(
                     summary_path,
                     f"STOP model_exit={process.returncode} job={receipt['job_id']} result_preserved={result_path}",
@@ -186,9 +214,10 @@ def run_worker(args: argparse.Namespace) -> int:
                     return 4
                 continue
             completed += 1
+            progress = f"{completed}/continuous" if args.continuous else f"{completed}/{args.max_jobs}"
             append_log(
                 summary_path,
-                f"ACCEPTED {completed}/{args.max_jobs} job={receipt['job_id']} outcome={accepted['research_outcome']}",
+                f"ACCEPTED {progress} job={receipt['job_id']} outcome={accepted['research_outcome']}",
             )
             break
     append_log(summary_path, f"STOP activation_limit completed={completed}")
@@ -206,6 +235,8 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--max-corrections", type=int, default=4)
     result.add_argument("--model-timeout", default="20m")
     result.add_argument("--process-timeout-seconds", type=int, default=1500)
+    result.add_argument("--continuous", action="store_true")
+    result.add_argument("--quota-retry-seconds", type=int, default=900)
     return result
 
 
@@ -216,6 +247,9 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     if args.max_corrections < 0 or args.max_corrections > 8:
         print("SUPERVISOR_STOP: max-corrections must be between 0 and 8", file=sys.stderr)
+        return 2
+    if args.quota_retry_seconds < 60 or args.quota_retry_seconds > 86_400:
+        print("SUPERVISOR_STOP: quota-retry-seconds must be between 60 and 86400", file=sys.stderr)
         return 2
     try:
         return run_worker(args)
