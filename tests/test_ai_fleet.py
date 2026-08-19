@@ -257,6 +257,11 @@ class FleetTests(unittest.TestCase):
             )
         )
         self.assertTrue(supervisor_module.quota_exhausted("", "Quota exceeded; retry later"))
+        self.assertTrue(
+            supervisor_module.quota_exhausted(
+                '{"api_error_status":429,"result":"You have hit your session limit"}', ""
+            )
+        )
         self.assertFalse(supervisor_module.quota_exhausted("authentication expired", ""))
 
     def test_claude_command_preapproves_only_bounded_tools(self) -> None:

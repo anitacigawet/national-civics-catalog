@@ -135,6 +135,8 @@ def quota_exhausted(stdout: str, stderr: str) -> bool:
             "quota exceeded",
             "quota exhausted",
             "rate limit exceeded",
+            "hit your session limit",
+            '"api_error_status":429',
         )
     )
 
