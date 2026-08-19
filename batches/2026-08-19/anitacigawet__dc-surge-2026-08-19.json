@@ -1,0 +1,123 @@
+{
+  "schema_version": "national-civics-catalog.maintainer-batch.v1",
+  "batch_id": "dc-surge-2026-08-19",
+  "maintainer": {
+    "github_login": "anitacigawet"
+  },
+  "source_bundle_sha256": "20b1502275406f70d91536158350d6cccba2751ded248af2423afa5d3c040dbc",
+  "ai_tools": [
+    "multi_agent/claude-sonnet-5+openai-web (nine-lane-dc-surge)"
+  ],
+  "candidates": [
+    {
+      "state_code": "DC",
+      "source_id": "us-dc-census-government-124214--primary-meeting-source",
+      "source": {
+        "source_id": "us-dc-census-government-124214--primary-meeting-source",
+        "publisher_name": "Washington Dc",
+        "publisher_type": "municipality",
+        "state_codes": [
+          "DC"
+        ],
+        "county_names": [
+          "Washington Dc County"
+        ],
+        "official_website_url": "https://dccouncil.gov/",
+        "endpoint_type": "meeting_calendar",
+        "url": "https://dccouncil.gov/events/",
+        "platform": "custom",
+        "access_method": "html",
+        "source_relationship": "first_party",
+        "status": "unverified",
+        "last_checked": "2026-08-19",
+        "provenance_url": "https://dccouncil.gov/press-center/",
+        "covers": [
+          {
+            "name": "Washington Dc",
+            "type": "municipality",
+            "state_codes": [
+              "DC"
+            ],
+            "county_names": [
+              "Washington Dc County"
+            ],
+            "relationship": "direct_jurisdiction",
+            "ocd_division_id": null,
+            "census_geoid": "1150000"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "url": "https://dccouncil.gov/events/",
+          "claim": "The Council of the District of Columbia publishes a continuing, filterable calendar of legislative meetings, committee meetings, hearings, and roundtables.",
+          "accessed_on": "2026-08-19"
+        },
+        {
+          "url": "https://dccouncil.gov/press-center/",
+          "claim": "The Council's first-party Press Center identifies its online calendar as the up-to-date source for legislative and committee meetings, hearings, roundtables, agendas, and related documents.",
+          "accessed_on": "2026-08-19"
+        },
+        {
+          "url": "https://dccouncil.gov/about-the-council/",
+          "claim": "The Council's first-party overview directs the public to the Council calendar for upcoming meetings and hearings and identifies the Council as the District's year-round legislative body.",
+          "accessed_on": "2026-08-19"
+        }
+      ],
+      "notes": "Washington, DC is a consolidated city/state-equivalent government with no separate municipal legislature. The municipality-shaped Census record and the state-equivalent record therefore use the same Council of the District of Columbia calendar. The record remains unverified pending ordinary catalog review."
+    },
+    {
+      "state_code": "DC",
+      "source_id": "us-dc-state--primary-meeting-source",
+      "source": {
+        "source_id": "us-dc-state--primary-meeting-source",
+        "publisher_name": "District of Columbia",
+        "publisher_type": "state",
+        "state_codes": [
+          "DC"
+        ],
+        "county_names": [],
+        "official_website_url": "https://dccouncil.gov/",
+        "endpoint_type": "meeting_calendar",
+        "url": "https://dccouncil.gov/events/",
+        "platform": "custom",
+        "access_method": "html",
+        "source_relationship": "first_party",
+        "status": "unverified",
+        "last_checked": "2026-08-19",
+        "provenance_url": "https://dccouncil.gov/press-center/",
+        "covers": [
+          {
+            "name": "District of Columbia",
+            "type": "state",
+            "state_codes": [
+              "DC"
+            ],
+            "county_names": [],
+            "relationship": "direct_jurisdiction",
+            "ocd_division_id": null,
+            "census_geoid": "11"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "url": "https://dccouncil.gov/events/",
+          "claim": "The Council of the District of Columbia publishes a continuing, filterable calendar of legislative meetings, committee meetings, hearings, and roundtables for the District.",
+          "accessed_on": "2026-08-19"
+        },
+        {
+          "url": "https://dccouncil.gov/press-center/",
+          "claim": "The Council's first-party Press Center identifies its online calendar as the up-to-date source for legislative and committee meetings, hearings, roundtables, agendas, and related documents.",
+          "accessed_on": "2026-08-19"
+        },
+        {
+          "url": "https://dccouncil.gov/about-the-council/",
+          "claim": "The Council's first-party overview identifies legislative meetings and Committee of the Whole sessions as public and directs residents to the Council calendar for upcoming meetings and hearings.",
+          "accessed_on": "2026-08-19"
+        }
+      ],
+      "notes": "The District of Columbia is a consolidated city/state-equivalent government. Its state-shaped Census record and municipality-shaped record describe the same jurisdiction and correctly use the same Council of the District of Columbia calendar. The record remains unverified pending ordinary catalog review."
+    }
+  ]
+}
