@@ -1,0 +1,58 @@
+{
+  "schema_version": "national-civics-catalog.contribution.v1",
+  "change_kind": "add",
+  "contributor": {
+    "github_login": "anitacigawet",
+    "ai_tools": [
+      "Claude Sonnet 5 (DC source verification)",
+      "Gemini 3.x (DC source verification)",
+      "OpenAI web search (first-party source verification)"
+    ],
+    "reviewed_by_contributor": true
+  },
+  "source": {
+    "source_id": "us-dc-council-of-the-district-of-columbia--hearing-management-system",
+    "publisher_name": "Council of the District of Columbia",
+    "publisher_type": "civic_body",
+    "state_codes": [
+      "DC"
+    ],
+    "county_names": [],
+    "official_website_url": "https://dccouncil.gov/",
+    "endpoint_type": "meeting_calendar",
+    "url": "https://lims.dccouncil.gov/hearings/",
+    "platform": "LIMS",
+    "access_method": "html",
+    "source_relationship": "first_party",
+    "status": "unverified",
+    "last_checked": "2026-08-19",
+    "provenance_url": "https://dccouncil.gov/how-to-testify-before-the-council/",
+    "covers": [
+      {
+        "name": "District of Columbia",
+        "type": "state",
+        "state_codes": [
+          "DC"
+        ],
+        "county_names": [],
+        "relationship": "direct_jurisdiction",
+        "ocd_division_id": null,
+        "census_geoid": "11"
+      },
+      {
+        "name": "Washington Dc",
+        "type": "municipality",
+        "state_codes": [
+          "DC"
+        ],
+        "county_names": [
+          "Washington Dc County"
+        ],
+        "relationship": "direct_jurisdiction",
+        "ocd_division_id": null,
+        "census_geoid": "1150000"
+      }
+    ]
+  },
+  "evidence_notes": "The Council of the District of Columbia directs the public to its first-party Hearing Management System for upcoming hearings and roundtables, issues under discussion, witness registration, and testimony submission. This continuing LIMS collection complements the broader Council events calendar. Verified on 2026-08-19 at https://dccouncil.gov/how-to-testify-before-the-council/ and https://lims.dccouncil.gov/hearings/."
+}
