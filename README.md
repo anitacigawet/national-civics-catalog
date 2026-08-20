@@ -71,6 +71,6 @@ This response applies after the contribution is merged into National Civics Cata
 
 ## License
 
-This repository is available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). The current licensor is James Jones.
+This repository is available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). The current copyright owner and licensor is ScootSolute LLC.
 
 The license applies only to copyrightable material and rights the licensor owns in the catalog software, schemas, documentation, metadata, and any protectable selection or arrangement. Government facts, public URLs, and third-party material remain subject to applicable law and their source terms. See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
