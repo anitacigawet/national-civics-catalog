@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import ipaddress
 import json
 import re
@@ -204,8 +205,9 @@ def validate_record(record: Any, label: str, state_code: str) -> list[str]:
     return errors
 
 
-def validate_catalog() -> tuple[int, list[str]]:
-    files = sorted(STATES.glob("*.jsonl"))
+def validate_catalog(root: Path = ROOT) -> tuple[int, list[str]]:
+    states = root / "states"
+    files = sorted(states.glob("*.jsonl"))
     errors: list[str] = []
     seen: dict[str, str] = {}
     total = 0
@@ -226,7 +228,7 @@ def validate_catalog() -> tuple[int, list[str]]:
             errors.append(f"{path}: filename must be a lowercase USPS code")
         file_ids: list[str] = []
         for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-            label = f"{path.relative_to(ROOT).as_posix()}:{line_number}"
+            label = f"{path.relative_to(root).as_posix()}:{line_number}"
             if not line:
                 errors.append(f"{label}: blank lines are not allowed")
                 continue
@@ -249,18 +251,22 @@ def validate_catalog() -> tuple[int, list[str]]:
                 file_ids.append(source_id)
             total += 1
         if file_ids != sorted(file_ids):
-            errors.append(f"{path.relative_to(ROOT).as_posix()}: records must be sorted by source_id")
+            errors.append(f"{path.relative_to(root).as_posix()}: records must be sorted by source_id")
     return total, errors
 
 
 def main() -> int:
-    count, errors = validate_catalog()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=ROOT)
+    args = parser.parse_args()
+    root = args.root.resolve()
+    count, errors = validate_catalog(root)
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         print(f"Catalog invalid: {len(errors)} error(s), {count} parsed entries.", file=sys.stderr)
         return 1
-    print(f"Catalog valid: {count} entries across {len(list(STATES.glob('*.jsonl')))} state and territory files.")
+    print(f"Catalog valid: {count} entries across {len(list((root / 'states').glob('*.jsonl')))} state and territory files.")
     return 0
 
 

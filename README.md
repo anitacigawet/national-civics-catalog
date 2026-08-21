@@ -86,7 +86,7 @@ The catalog welcomes factual source suggestions, data corrections, and focused p
 
 If you are comfortable editing JSON, you can fill an existing `needs_source` placeholder or correct an entry directly in its [`states/`](states/) file. The contribution guide explains the record rules, catalog boundaries, local validation command, and licensing terms: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-Contributors are credited through Git history and retain ownership of any copyrightable work they create. Accepted contributions are licensed under the same PolyForm Noncommercial terms as the repository; they are not assigned to ScootSolute LLC.
+Contributors are credited through Git history. Contributing does not create ownership or control of the catalog. Accepted contributions are licensed under the same PolyForm Noncommercial terms as the repository, and any copyright a contributor retains is limited to that contributor's own original contribution.
 
 ## Maintenance
 
@@ -94,6 +94,6 @@ ScootSolute LLC maintains and reviews the catalog with help from contributors. I
 
 ## License
 
-This repository is source-available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). ScootSolute LLC is the copyright owner and licensor for the portions it owns. Contributors retain ownership of their copyrightable contributions and license them under the same terms.
+This repository is source-available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). ScootSolute LLC is the copyright owner and licensor for the catalog and compilation material it owns. A contribution does not make its contributor an owner or joint author of the catalog. Any copyrightable original material retained by a contributor is licensed under the same terms.
 
 The license applies only to copyrightable material and rights the licensor owns in the catalog, schema, documentation, metadata, and any protectable selection or arrangement. Government facts, public URLs, and third-party material remain subject to applicable law and their source terms. See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
