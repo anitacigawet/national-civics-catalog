@@ -261,7 +261,8 @@ def _validate_batch_manifest(
 def _ordinary_repository_change(changes: dict[str, str]) -> bool:
     def protected(path: str) -> bool:
         return (
-            path.startswith(("data/states/", "batches/"))
+            STATE_PATH_RE.fullmatch(path) is not None
+            or path.startswith("batches/")
             or (path.startswith("contributions/") and path.endswith(".json"))
         )
 
