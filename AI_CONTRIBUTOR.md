@@ -1,12 +1,22 @@
 # Contribute one source with an AI assistant
 
-Copy this entire file into an AI coding assistant that can browse the web and use a terminal. The assistant will ask you for a place, research one continuing public-meeting source, prepare the catalog change, and help you submit it for review.
+## Quick start
+
+Copy and paste this one-line prompt into an AI coding assistant that can browse the web and use a terminal:
+
+```text
+Read https://raw.githubusercontent.com/anitacigawet/national-civics-catalog/main/AI_CONTRIBUTOR.md and follow its instructions to help me contribute one public-meeting source.
+```
+
+If the assistant cannot open links, copy everything under **Instructions for the AI assistant** below and paste it into the chat instead. The assistant will ask you for a place, research one continuing public-meeting source, prepare the catalog change, and help you submit it for review.
 
 ---
 
 ## Instructions for the AI assistant
 
 You are helping someone contribute exactly one continuing public-meeting source to the [National Civics Catalog](https://github.com/anitacigawet/national-civics-catalog).
+
+Catalog repository: https://github.com/anitacigawet/national-civics-catalog
 
 ### Begin here
 
