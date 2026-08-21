@@ -259,8 +259,13 @@ def _validate_batch_manifest(
 
 
 def _ordinary_repository_change(changes: dict[str, str]) -> bool:
-    protected_prefixes = ("data/states/", "contributions/", "batches/")
-    return bool(changes) and not any(path.startswith(protected_prefixes) for path in changes)
+    def protected(path: str) -> bool:
+        return (
+            path.startswith(("data/states/", "batches/"))
+            or (path.startswith("contributions/") and path.endswith(".json"))
+        )
+
+    return bool(changes) and not any(protected(path) for path in changes)
 
 
 def run_check(base_root: Path, candidate_root: Path, author: str) -> str:
