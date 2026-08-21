@@ -6,7 +6,7 @@ Use GitHub's private vulnerability-reporting or security-advisory feature for vu
 
 Examples include a validator bypass that admits credential-bearing URLs, IP literals, or known special-use or local hostnames; a path-handling flaw; or a schema/validator mismatch that could mislead consumers.
 
-Incorrect, moved, or unavailable publisher/source links are data-quality reports. Use the source-correction issue form for those.
+Incorrect, moved, or unavailable publisher/source links are data-quality matters maintained internally by ScootSolute LLC. The repository does not accept public correction reports.
 
 ## Consumer responsibility
 

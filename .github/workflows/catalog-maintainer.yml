@@ -1,4 +1,4 @@
-name: Catalog contribution check
+name: Catalog maintainer check
 
 on:
   pull_request_target:
@@ -8,12 +8,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: catalog-contribution-${{ github.event.pull_request.number }}
+  group: catalog-maintainer-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  catalog-contribution:
-    name: Trusted catalog contribution
+  catalog-maintainer:
+    name: Trusted maintainer change
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Validate contribution with trusted base checker
+      - name: Validate maintainer change with trusted base checker
         env:
           CATALOG_PR_AUTHOR: ${{ github.event.pull_request.user.login }}
         run: >-
