@@ -34,7 +34,7 @@ A source is stored under the alphabetically first entry in its `state_codes` lis
 
 ## Status meaning
 
-- `needs_source`: the government or place record exists, but no continuing meeting source has been contributed. Endpoint-specific fields and `last_checked` must all be `null`.
+- `needs_source`: the government or place record exists, but no continuing meeting source has been added. Endpoint-specific fields and `last_checked` must all be `null`.
 - `working`: the source was reachable and recognizable at the last check.
 - `empty`: the source worked and showed a recognized empty state.
 - `blocked`: a source-side barrier prevented a conclusive content check.

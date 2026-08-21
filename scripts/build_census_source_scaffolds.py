@@ -3,7 +3,7 @@
 
 Each active county, municipal, or township government begins with the same
 source-record shape used by reviewed endpoints. Endpoint-specific fields stay
-``null`` and the status stays ``needs_source`` until a contribution supplies
+``null`` and the status stays ``needs_source`` until catalog maintenance supplies
 evidence. Existing reviewed records are preserved and suppress a matching
 Census placeholder.
 """
@@ -318,11 +318,9 @@ def _state_readme(
         "comes from active general-purpose governments in the 2022 Census of "
         "Governments; it does not claim that every local civic body is already "
         "represented.\n\n"
-        "Choose the record for your area, then give your AI coding assistant "
-        "[the contribution instructions](../../../contribute/AI-INSTRUCTIONS.md). "
-        "The contribution fills that record with one continuing public meeting "
-        "source and an evidence packet; it does not collect meetings or parser "
-        "code.\n"
+        "ScootSolute LLC maintains these records directly. When a source is "
+        "added, the record identifies one continuing public meeting source and "
+        "retains its evidence; it does not collect meetings or parser code.\n"
     )
 
 
