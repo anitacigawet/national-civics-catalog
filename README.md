@@ -80,12 +80,20 @@ You can use the catalog as a starting point for a noncommercial map, archive, re
 
 [Z-SPAN](https://zspan.org) is a separate application that turns civic meeting sources into a public virtual library. Z-SPAN maintains its parsers and application code in its own repository. National Civics Catalog remains application-agnostic and contains only the source roster and its metadata.
 
+## Contribute
+
+The catalog welcomes factual source suggestions, data corrections, and focused pull requests. You do not need to write code: the GitHub issue forms collect the public evidence a maintainer or another contributor needs to update an entry.
+
+If you are comfortable editing JSON, you can fill an existing `needs_source` placeholder or correct an entry directly in its [`states/`](states/) file. The contribution guide explains the record rules, catalog boundaries, local validation command, and licensing terms: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+Contributors are credited through Git history. Contributing does not create ownership or control of the catalog. Accepted contributions are licensed under the same PolyForm Noncommercial terms as the repository, and any copyright a contributor retains is limited to that contributor's own original contribution.
+
 ## Maintenance
 
-ScootSolute LLC maintains the catalog directly. The repository does not accept outside pull requests, public issues, source submissions, or data corrections. Its public visibility is for transparency, citation, and uses permitted by the license.
+ScootSolute LLC maintains and reviews the catalog with help from contributors. Identified endpoints submitted from outside the maintainer's completed review process enter as `unverified` until their evidence and behavior have been checked.
 
 ## License
 
-This repository is source-available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). The current copyright owner and licensor is ScootSolute LLC.
+This repository is source-available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). ScootSolute LLC is the copyright owner and licensor for the catalog and compilation material it owns. A contribution does not make its contributor an owner or joint author of the catalog. Any copyrightable original material retained by a contributor is licensed under the same terms.
 
 The license applies only to copyrightable material and rights the licensor owns in the catalog, schema, documentation, metadata, and any protectable selection or arrangement. Government facts, public URLs, and third-party material remain subject to applicable law and their source terms. See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).

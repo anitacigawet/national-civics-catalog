@@ -1,0 +1,40 @@
+name: Data correction
+description: Report an inaccurate, moved, broken, duplicated, or incomplete catalog entry.
+title: "Correction: "
+body:
+  - type: input
+    id: source_id
+    attributes:
+      label: Source ID
+      description: Copy the entry's source_id if you know it.
+      placeholder: us-az-example--primary-meeting-source
+  - type: input
+    id: state_file
+    attributes:
+      label: State or territory
+      description: Name the state or territory file containing the entry.
+      placeholder: Arizona (AZ)
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What should change?
+      description: Explain what is inaccurate, moved, broken, duplicated, or incomplete.
+    validations:
+      required: true
+  - type: input
+    id: evidence_url
+    attributes:
+      label: Public evidence URL
+      description: Link to the first-party page supporting the correction when one is available.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Catalog boundary
+      options:
+        - label: I have not included credentials, private information, copied prose, or unpublished material.
+          required: true
