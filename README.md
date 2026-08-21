@@ -86,6 +86,8 @@ The catalog welcomes factual source suggestions, data corrections, and focused p
 
 If you are comfortable editing JSON, you can fill an existing `needs_source` placeholder or correct an entry directly in its [`states/`](states/) file. The contribution guide explains the record rules, catalog boundaries, local validation command, and licensing terms: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+If you would like an AI coding assistant to guide you through the complete workflow, copy and paste [`AI_CONTRIBUTOR.md`](AI_CONTRIBUTOR.md). It begins by asking which place you want to research and continues through tool setup, source research, validation, and pull-request creation.
+
 Contributors are credited through Git history. Contributing does not create ownership or control of the catalog. Accepted contributions are licensed under the same PolyForm Noncommercial terms as the repository, and any copyright a contributor retains is limited to that contributor's own original contribution.
 
 ## Maintenance
