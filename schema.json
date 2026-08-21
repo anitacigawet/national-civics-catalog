@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/anitacigawet/national-civics-catalog/schemas/source.schema.json",
-  "title": "Civic meeting source",
+  "$id": "https://github.com/anitacigawet/national-civics-catalog/schema.json",
+  "title": "Civic source catalog entry",
   "type": "object",
   "additionalProperties": false,
   "required": [

@@ -8,7 +8,7 @@ authors:
     given-names: "James"
 license: PolyForm-Noncommercial-1.0.0
 repository-code: "https://github.com/anitacigawet/national-civics-catalog"
-abstract: "A state-by-state directory of public meeting calendars and source endpoints across the United States."
+abstract: "A national roster of public bodies and a state-by-state catalog of identified public-meeting sources."
 keywords:
   - civic-data
   - tribal-government
