@@ -1,0 +1,56 @@
+name: Source suggestion
+description: Suggest a continuing public-meeting source that is missing from the catalog.
+title: "Source: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve the catalog. Please submit a continuing collection-level source, not one meeting page, document, recording, transcript, or summary.
+  - type: input
+    id: publisher
+    attributes:
+      label: Publisher
+      description: Name the public body that publishes or authorizes the source.
+      placeholder: Public name of the publishing body
+    validations:
+      required: true
+  - type: input
+    id: place
+    attributes:
+      label: Place
+      description: Give the city, county, district, Tribal jurisdiction, state, or territory the source covers.
+      placeholder: Place, state or territory
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: Continuing source URL
+      description: Link to the calendar, portal, index, feed, API, or archive rather than an individual meeting.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: input
+    id: evidence_url
+    attributes:
+      label: First-party evidence URL
+      description: Link to a publisher page showing that it uses or authorizes the source. This may be the source itself.
+      placeholder: https://...
+    validations:
+      required: true
+  - type: textarea
+    id: coverage
+    attributes:
+      label: What does this source cover?
+      description: Briefly explain the meetings, places, or public bodies represented by the source.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Catalog boundary
+      options:
+        - label: This is a continuing collection-level source, not an individual meeting or file.
+          required: true
+        - label: I have not included credentials, private information, copied prose, or unpublished material.
+          required: true
