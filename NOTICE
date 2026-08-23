@@ -1,24 +1,22 @@
 National Civics Catalog
 
-Required Notice: Copyright 2026 ScootSolute LLC
+ScootSolute LLC applies the CC0 1.0 Universal public-domain dedication in
+LICENSE to all copyright and related rights it owns in the catalog data,
+schema, metadata, documentation, and any protectable selection,
+coordination, or arrangement in this repository.
 
-The PolyForm Noncommercial License 1.0.0 applies only to rights the licensor
-owns in the catalog schema, documentation, metadata, and any
-protectable selection, coordination, or arrangement. Underlying government
-facts and third-party materials are not licensed by ScootSolute LLC and remain
-subject to applicable law and their source terms.
+Supporting software and workflow code under .github/scripts/ and
+.github/workflows/ is provided under the MIT License in LICENSE-MIT.
 
-Contributing does not create ownership or control of the National Civics
-Catalog or ScootSolute LLC, and it does not make a contributor a joint author
-of the catalog. To the extent a contribution contains copyrightable original
-material, its contributor retains copyright only in that contribution and
-licenses it under the same PolyForm Noncommercial License 1.0.0. The Required
-Notice above identifies material owned by ScootSolute LLC; it does not claim
-government facts, public URLs, or third-party content.
+These terms are intended to encourage reuse in projects of every size and
+kind, including commercial and noncommercial projects. No separate
+permission is required for uses covered by CC0 or MIT.
 
-Some source coverage entries carry identifiers from the Open Civic Data Division
-Identifiers project. Those identifiers remain under that project's CC0 1.0
-public-domain dedication; see THIRD_PARTY_NOTICES.md.
+CC0 and MIT apply only to rights that ScootSolute LLC and contributors can
+legally dedicate or license. ScootSolute LLC does not claim exclusive rights
+in government facts, public URLs, Open Civic Data Division Identifiers, or
+other third-party material. Those materials remain subject to applicable law
+and their source terms. See THIRD_PARTY_NOTICES.md.
 
 The catalog identifies collection-level sources published by, or provided as
 an authorized service for, named publishers. Inclusion does not establish
@@ -29,9 +27,8 @@ endorses the catalog.
 The catalog does not include or license content published at linked
 locations.
 
-The Z-SPAN name, logo, and other marks are not part of this repository. No
-permission is granted to brand a fork as Z-SPAN or imply endorsement.
-Independent forks should use distinct branding; this notice does not
-restrict uses permitted by applicable law.
+CC0 does not waive or license trademark rights. The National Civics Catalog
+name and branding remain separate from the public-domain dedication, and no
+permission is granted to imply endorsement by ScootSolute LLC.
 
 Z-SPAN is a separate application and is not licensed by this repository.

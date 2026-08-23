@@ -11,4 +11,4 @@ Briefly describe the source addition or correction and the public evidence suppo
 - [ ] I did not include credentials, private information, copied third-party prose, parser code, or meeting content.
 - [ ] If I used an AI assistant, I personally reviewed its proposed changes and opened both the endpoint and provenance links.
 - [ ] I ran `python .github/scripts/validate_catalog.py` successfully.
-- [ ] I have the right to submit this contribution under the repository's PolyForm Noncommercial License 1.0.0.
+- [ ] I have the right to submit this catalog contribution under CC0 1.0 Universal, or this supporting software contribution under the MIT License, as applicable.

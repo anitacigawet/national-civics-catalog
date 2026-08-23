@@ -55,6 +55,6 @@ Inclusion means that a source is first-party to, or an authorized service for, t
 
 ## Contribution terms
 
-By submitting a pull request, you agree to license your contribution under the repository's [PolyForm Noncommercial License 1.0.0](LICENSE), and you represent that you have the right to do so. Contributing does not give you ownership or control of the National Civics Catalog or ScootSolute LLC, and it does not make you a joint author of the catalog. To the extent your contribution contains copyrightable original material, you retain copyright only in that contribution and license it under the same repository terms. Public facts and URLs remain subject to applicable law.
+By submitting a pull request containing catalog data, schema changes, metadata, or documentation, you represent that you have the right to contribute it and agree to release any copyright and related rights you hold in that contribution under the repository's [CC0 1.0 Universal public-domain dedication](LICENSE). Supporting software and workflow contributions, if accepted, are provided under the [MIT License](LICENSE-MIT). Contributing does not give you ownership or control of the National Civics Catalog or ScootSolute LLC, and it does not make you a joint author of the catalog. Public facts and URLs remain subject to applicable law.
 
 Please contribute facts, links, and your own wording. Do not copy third-party prose, code, images, or datasets unless their terms clearly permit inclusion and you identify the applicable source and license.
