@@ -6,7 +6,7 @@ version: "0.1.0"
 authors:
   - family-names: "Jones"
     given-names: "James"
-license: PolyForm-Noncommercial-1.0.0
+license: CC0-1.0
 repository-code: "https://github.com/anitacigawet/national-civics-catalog"
 abstract: "A national roster of public bodies and a state-by-state catalog of identified public-meeting sources."
 keywords:

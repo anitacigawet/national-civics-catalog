@@ -74,7 +74,7 @@ for state_file in Path("states").glob("*.jsonl"):
 print(f"Loaded {len(sources)} identified endpoints")
 ```
 
-You can use the catalog as a starting point for a noncommercial map, archive, research project, civic application, or another source directory permitted by the license.
+Anyone is encouraged to use, copy, combine, redistribute, and build on the catalog in **any project—commercial or noncommercial, large or small**. That includes paid products, volunteer tools, research, archives, maps, civic applications, and other source directories. No separate permission is needed for material released under CC0.
 
 ## Relationship to Z-SPAN
 
@@ -88,7 +88,7 @@ If you are comfortable editing JSON, you can fill an existing `needs_source` pla
 
 If you would like an AI coding assistant to guide you through the complete workflow, copy and paste [`AI_CONTRIBUTOR.md`](AI_CONTRIBUTOR.md). It begins by asking which place you want to research and continues through tool setup, source research, validation, and pull-request creation.
 
-Contributors are credited through Git history. Contributing does not create ownership or control of the catalog. Accepted contributions are licensed under the same PolyForm Noncommercial terms as the repository, and any copyright a contributor retains is limited to that contributor's own original contribution.
+Contributors are credited through Git history. Catalog contributions are released under CC0 so that everyone can reuse them freely; supporting software contributions are released under the MIT License. Contributing does not create ownership or control of the catalog.
 
 ## Maintenance
 
@@ -96,6 +96,8 @@ ScootSolute LLC maintains and reviews the catalog with help from contributors. I
 
 ## License
 
-This repository is source-available for permitted noncommercial uses under the [PolyForm Noncommercial License 1.0.0](LICENSE). ScootSolute LLC is the copyright owner and licensor for the catalog and compilation material it owns. A contribution does not make its contributor an owner or joint author of the catalog. Any copyrightable original material retained by a contributor is licensed under the same terms.
+ScootSolute LLC has released the catalog data, schema, metadata, documentation, and any protectable selection or arrangement it owns under the [CC0 1.0 Universal public-domain dedication](LICENSE). These materials may be used for any purpose, including commercial products, without separate permission or required attribution.
 
-The license applies only to copyrightable material and rights the licensor owns in the catalog, schema, documentation, metadata, and any protectable selection or arrangement. Government facts, public URLs, and third-party material remain subject to applicable law and their source terms. See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+Supporting software and workflow code under [`.github/scripts/`](.github/scripts/) and [`.github/workflows/`](.github/workflows/) is available under the [MIT License](LICENSE-MIT).
+
+CC0 applies only to rights ScootSolute LLC and contributors can legally dedicate. Government facts, public URLs, linked content, and third-party material remain subject to applicable law and their source terms. CC0 does not grant trademark rights in the National Civics Catalog name or other branding. See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
