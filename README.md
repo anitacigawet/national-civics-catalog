@@ -76,6 +76,12 @@ print(f"Loaded {len(sources)} identified endpoints")
 
 Anyone is encouraged to use, copy, combine, redistribute, and build on the catalog in **any project—commercial or noncommercial, large or small**. That includes paid products, volunteer tools, research, archives, maps, civic applications, and other source directories. No separate permission is needed for material released under CC0.
 
+## Using linked material
+
+The catalog's CC0 dedication covers the catalog material that ScootSolute LLC and contributors have the right to dedicate. It does not grant rights to records, documents, media, software, personal information, or other content available through the sources it identifies.
+
+Rules governing access, reproduction, redistribution, and commercial use of linked material may differ by source and jurisdiction, including under applicable federal, state, Tribal, territorial, or local law and the source's own terms. Before using linked material—especially commercially—users are responsible for determining and complying with any applicable laws, licenses, terms, privacy obligations, and permission requirements. This notice provides general information only, not legal advice; consult a qualified attorney about a specific use.
+
 ## Relationship to Z-SPAN
 
 [Z-SPAN](https://zspan.org) is a separate application that turns civic meeting sources into a public virtual library. Z-SPAN maintains its parsers and application code in its own repository. National Civics Catalog remains application-agnostic and contains only the source roster and its metadata.
