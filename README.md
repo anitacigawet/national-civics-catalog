@@ -10,10 +10,10 @@ It does not contain individual meetings, agendas, minutes, recordings, transcrip
 
 The repository contains **38,707 catalog entries** across every U.S. state, the District of Columbia, and the five inhabited territories.
 
-- **1,414 entries contain identified meeting-source endpoints.**
-- **153 of those endpoints have completed an initial review.**
-- **1,261 are clearly marked `unverified` while review is pending.**
-- **37,293 entries are intentional research placeholders** with `status: "needs_source"` and no claimed endpoint.
+- **18,905 entries contain identified meeting-source endpoints.**
+- **17,628 of those endpoints have completed an initial review.**
+- **1,277 are clearly marked `unverified` while review is pending.**
+- **19,802 entries are intentional research placeholders** with `status: "needs_source"` and no claimed endpoint.
 
 The placeholders are part of the product. They preserve the national roster and a stable record shape while the catalog is filled in. They should not be read as discovered sources or working links.
 
