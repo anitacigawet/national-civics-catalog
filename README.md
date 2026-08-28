@@ -17,6 +17,12 @@ The repository contains **38,707 catalog entries** across every U.S. state, the 
 
 The placeholders are part of the product. They preserve the national roster and a stable record shape while the catalog is filled in. They should not be read as discovered sources or working links.
 
+> ### Transparency: where no continuing source was found
+>
+> The completed national research and review pass found **10,764 roster entries with no qualifying official continuing online meeting source**. These gaps are concentrated among very small governments: **97.0% represent populations below 5,000**, and the median population is **270**. Most are townships and small municipalities.
+>
+> “No qualifying source found” does not mean that the government is inactive or holds no meetings. It means that no recurring first-party or demonstrably authorized online calendar, agenda or minutes index, public-notice page, feed, API, or meeting portal passed the catalog's evidence rules. Population figures come from the Census Bureau's 2022 Government Units Listing and are primarily 2021 estimates.
+
 The starting roster comes from the U.S. Census Bureau's 2022 Government Units Listing and covers active state, county, municipal, and township governments. It is a foundation, not a claim that every Tribal government, civic body, unincorporated community, special district, or newer government is already represented.
 
 ## Browse the catalog
