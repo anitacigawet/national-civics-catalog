@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="repository-assets/banner.png" alt="National Civics Catalog" width="1000">
+</p>
+
 # National Civics Catalog
 
 National Civics Catalog lists U.S. public bodies and the official or authorized pages they use to publish meeting information. Records without an identified source remain visible as `needs_source` instead of being omitted.
