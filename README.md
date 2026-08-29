@@ -1,8 +1,6 @@
 # National Civics Catalog
 
-**A state-by-state catalog of public bodies and the continuing sources they use to publish meeting information.**
-
-The catalog gives civic projects a national starting shape. It identifies the governments and jurisdictions that need research, then fills their entries with continuing calendars, agenda indexes, public-notice pages, feeds, APIs, and meeting portals as those sources are found and reviewed.
+National Civics Catalog lists U.S. public bodies and the official or authorized pages they use to publish meeting information. Records without an identified source remain visible as `needs_source` instead of being omitted.
 
 It does not contain individual meetings, agendas, minutes, recordings, transcripts, summaries, or parser code.
 
@@ -19,7 +17,7 @@ The placeholders are part of the product. They preserve the national roster and 
 
 > ### Transparency: where no continuing source was found
 >
-> The initial national research and review pass recorded **10,764 roster entries with no qualifying official continuing online meeting source**. These gaps were concentrated among very small governments: **97.0% represent populations below 5,000**, and the median population is **270**. Most are townships and small municipalities. Follow-up correction work has since identified additional sources, so this analyzed cohort is not the same as the repository's current `needs_source` count above.
+> Of the **17,388 current `needs_source` records**, **17,383 matched** a government in the Census Bureau's 2022 Government Units Listing. Among those matched records, **91.4% have populations below 5,000**, and the median population is **381**. Five state-level records did not have a population value in the matched Census worksheet.
 >
 > “No qualifying source found” does not mean that the government is inactive or holds no meetings. It means that no recurring first-party or demonstrably authorized online calendar, agenda or minutes index, public-notice page, feed, API, or meeting portal passed the catalog's evidence rules. Population figures come from the Census Bureau's 2022 Government Units Listing and are primarily 2021 estimates.
 
@@ -80,7 +78,7 @@ for state_file in Path("states").glob("*.jsonl"):
 print(f"Loaded {len(sources)} identified endpoints")
 ```
 
-Anyone is encouraged to use, copy, combine, redistribute, and build on the catalog in **any project—commercial or noncommercial, large or small**. That includes paid products, volunteer tools, research, archives, maps, civic applications, and other source directories. No separate permission is needed for material released under CC0.
+Catalog material released under CC0 may be copied, combined, redistributed, or used in commercial and noncommercial projects without separate permission.
 
 ## Using linked material
 
@@ -94,11 +92,11 @@ Rules governing access, reproduction, redistribution, and commercial use of link
 
 ## Contribute
 
-The catalog welcomes factual source suggestions, data corrections, and focused pull requests. You do not need to write code: the GitHub issue forms collect the public evidence a maintainer or another contributor needs to update an entry.
+Factual source suggestions, data corrections, and focused pull requests are welcome. The GitHub issue forms collect the public evidence needed to update an entry without requiring contributors to edit code.
 
 If you are comfortable editing JSON, you can fill an existing `needs_source` placeholder or correct an entry directly in its [`states/`](states/) file. The contribution guide explains the record rules, catalog boundaries, local validation command, and licensing terms: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-If you would like an AI coding assistant to guide you through the complete workflow, copy and paste [`AI_CONTRIBUTOR.md`](AI_CONTRIBUTOR.md). It begins by asking which place you want to research and continues through tool setup, source research, validation, and pull-request creation.
+[`AI_CONTRIBUTOR.md`](AI_CONTRIBUTOR.md) provides a copy-and-paste workflow for using an AI coding assistant to research a place, validate the proposed record, and prepare a pull request.
 
 Contributors are credited through Git history. Catalog contributions are released under CC0 so that everyone can reuse them freely; supporting software contributions are released under the MIT License. Contributing does not create ownership or control of the catalog.
 

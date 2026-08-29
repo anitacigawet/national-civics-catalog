@@ -21,7 +21,9 @@ jobs:
         with:
           persist-credentials: false
       - name: Validate JSONL catalog
-        run: python .github/scripts/validate_catalog.py
+        run: |
+          python -m unittest discover -s .github/scripts -p 'test_*.py'
+          python .github/scripts/validate_catalog.py
 
   trusted-contribution:
     if: github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.fork

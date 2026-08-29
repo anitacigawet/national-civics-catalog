@@ -24,7 +24,7 @@ Do not submit an individual meeting page, agenda, minutes file, recording, trans
 1. Fork the repository and create a branch.
 2. Edit the appropriate file under [`states/`](states/). Each line is one complete JSON object.
 3. Keep the file sorted by `source_id` and avoid reformatting unrelated lines.
-4. Run `python .github/scripts/validate_catalog.py` from the repository root.
+4. Run `python .github/scripts/validate_catalog.py --fix-readme` from the repository root. This updates the public snapshot counts when a contribution changes coverage, then validates the catalog and README together.
 5. Open a pull request and complete the checklist.
 
 For a small factual change, keep the pull request to one state or one closely related set of entries. Please open an issue before submitting a large automated import or a change to the schema.

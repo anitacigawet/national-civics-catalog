@@ -7,11 +7,12 @@ import ipaddress
 import json
 import re
 import sys
-from collections import OrderedDict
+from collections import Counter, OrderedDict
 from datetime import date
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+import unicodedata
+from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -55,6 +56,14 @@ USPS_CODES = {
 }
 SOURCE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 CENSUS_GEOID = re.compile(r"^[0-9]{2,15}$")
+MAX_PERCENT_DECODE_ROUNDS = 3
+SNAPSHOT_PATTERNS = {
+    "total": re.compile(r"\*\*([0-9,]+) catalog entries\*\*"),
+    "identified": re.compile(r"\*\*([0-9,]+) entries contain identified meeting-source endpoints\.\*\*"),
+    "reviewed": re.compile(r"\*\*([0-9,]+) of those endpoints have completed an initial review\.\*\*"),
+    "unverified": re.compile(r"\*\*([0-9,]+) are clearly marked `unverified` while review is pending\.\*\*"),
+    "needs_source": re.compile(r"\*\*([0-9,]+) entries are intentional research placeholders\*\*"),
+}
 
 
 class DuplicateKey(ValueError):
@@ -74,25 +83,50 @@ def reject_nonfinite(value: str) -> None:
     raise ValueError(f"non-finite JSON number {value!r}")
 
 
+def validate_url_encoding(value: str, label: str) -> list[str]:
+    current = value
+    for decode_round in range(MAX_PERCENT_DECODE_ROUNDS + 1):
+        format_characters = sorted(
+            {f"U+{ord(character):04X}" for character in current if unicodedata.category(character) == "Cf"}
+        )
+        if format_characters:
+            return [
+                f"{label} contains Unicode format characters after percent-decoding: "
+                + ", ".join(format_characters)
+            ]
+        decoded = unquote(current)
+        if decoded == current:
+            return []
+        current = decoded
+        if decode_round == MAX_PERCENT_DECODE_ROUNDS:
+            return [
+                f"{label} contains excessive recursive percent-encoding "
+                f"(more than {MAX_PERCENT_DECODE_ROUNDS} decoding rounds)"
+            ]
+    raise AssertionError("unreachable")
+
+
 def validate_url(value: Any, label: str, *, nullable: bool = False) -> list[str]:
     if value is None and nullable:
         return []
     if not isinstance(value, str) or not value or value != value.strip() or len(value) > 2048:
         return [f"{label} must be a non-empty, trimmed URL of at most 2048 characters"]
+    errors = validate_url_encoding(value, label)
     try:
         parsed = urlsplit(value)
         port = parsed.port
     except ValueError as exc:
-        return [f"{label} is invalid: {exc}"]
+        return errors + [f"{label} is invalid: {exc}"]
     if parsed.scheme != "https" or not parsed.hostname or port not in (None, 443):
-        return [f"{label} must use HTTPS, a DNS hostname, and the default port"]
+        errors.append(f"{label} must use HTTPS, a DNS hostname, and the default port")
     if parsed.username is not None or parsed.password is not None:
-        return [f"{label} must not contain credentials"]
+        errors.append(f"{label} must not contain credentials")
     try:
         ipaddress.ip_address(parsed.hostname)
     except ValueError:
-        return []
-    return [f"{label} must use a DNS hostname, not an IP address"]
+        return errors
+    errors.append(f"{label} must use a DNS hostname, not an IP address")
+    return errors
 
 
 def validate_string_list(value: Any, label: str, *, required: bool = False) -> list[str]:
@@ -255,12 +289,76 @@ def validate_catalog(root: Path = ROOT) -> tuple[int, list[str]]:
     return total, errors
 
 
+def snapshot_counts(root: Path) -> dict[str, int]:
+    statuses: Counter[str] = Counter()
+    total = 0
+    identified = 0
+    for path in sorted((root / "states").glob("*.jsonl")):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            record = json.loads(line)
+            total += 1
+            statuses[record["status"]] += 1
+            if record["url"] is not None:
+                identified += 1
+    unverified = statuses["unverified"]
+    return {
+        "total": total,
+        "identified": identified,
+        "reviewed": identified - unverified,
+        "unverified": unverified,
+        "needs_source": statuses["needs_source"],
+    }
+
+
+def validate_readme_snapshot(root: Path) -> list[str]:
+    readme = root / "README.md"
+    if not readme.is_file():
+        return ["README.md: file not found"]
+    text = readme.read_text(encoding="utf-8")
+    expected = snapshot_counts(root)
+    errors: list[str] = []
+    for key, pattern in SNAPSHOT_PATTERNS.items():
+        matches = list(pattern.finditer(text))
+        if len(matches) != 1:
+            errors.append(f"README.md: expected exactly one {key} snapshot count")
+            continue
+        actual = int(matches[0].group(1).replace(",", ""))
+        if actual != expected[key]:
+            errors.append(
+                f"README.md: {key} snapshot count is {actual:,}; catalog data says {expected[key]:,}"
+            )
+    return errors
+
+
+def update_readme_snapshot(root: Path) -> None:
+    readme = root / "README.md"
+    text = readme.read_text(encoding="utf-8")
+    expected = snapshot_counts(root)
+    for key, pattern in SNAPSHOT_PATTERNS.items():
+        matches = list(pattern.finditer(text))
+        if len(matches) != 1:
+            raise SystemExit(f"README.md: expected exactly one {key} snapshot count")
+        match = matches[0]
+        replacement = match.group(0).replace(match.group(1), f"{expected[key]:,}")
+        text = text[: match.start()] + replacement + text[match.end() :]
+    readme.write_text(text, encoding="utf-8", newline="\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument(
+        "--fix-readme",
+        action="store_true",
+        help="update the five README snapshot counts from validated JSONL data",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     count, errors = validate_catalog(root)
+    if not errors and args.fix_readme:
+        update_readme_snapshot(root)
+    if not errors:
+        errors.extend(validate_readme_snapshot(root))
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)

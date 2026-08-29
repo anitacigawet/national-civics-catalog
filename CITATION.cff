@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If this source catalog helped your work, please cite it using this metadata."
 title: "National Civics Catalog"
 type: dataset
-version: "0.1.0"
+version: "1.0.0"
 authors:
   - family-names: "Jones"
     given-names: "James"
