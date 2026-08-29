@@ -10,16 +10,16 @@ It does not contain individual meetings, agendas, minutes, recordings, transcrip
 
 The repository contains **38,707 catalog entries** across every U.S. state, the District of Columbia, and the five inhabited territories.
 
-- **18,905 entries contain identified meeting-source endpoints.**
-- **17,628 of those endpoints have completed an initial review.**
-- **1,277 are clearly marked `unverified` while review is pending.**
-- **19,802 entries are intentional research placeholders** with `status: "needs_source"` and no claimed endpoint.
+- **21,319 entries contain identified meeting-source endpoints.**
+- **20,085 of those endpoints have completed an initial review.**
+- **1,234 are clearly marked `unverified` while review is pending.**
+- **17,388 entries are intentional research placeholders** with `status: "needs_source"` and no claimed endpoint.
 
 The placeholders are part of the product. They preserve the national roster and a stable record shape while the catalog is filled in. They should not be read as discovered sources or working links.
 
 > ### Transparency: where no continuing source was found
 >
-> The completed national research and review pass found **10,764 roster entries with no qualifying official continuing online meeting source**. These gaps are concentrated among very small governments: **97.0% represent populations below 5,000**, and the median population is **270**. Most are townships and small municipalities.
+> The initial national research and review pass recorded **10,764 roster entries with no qualifying official continuing online meeting source**. These gaps were concentrated among very small governments: **97.0% represent populations below 5,000**, and the median population is **270**. Most are townships and small municipalities. Follow-up correction work has since identified additional sources, so this analyzed cohort is not the same as the repository's current `needs_source` count above.
 >
 > “No qualifying source found” does not mean that the government is inactive or holds no meetings. It means that no recurring first-party or demonstrably authorized online calendar, agenda or minutes index, public-notice page, feed, API, or meeting portal passed the catalog's evidence rules. Population figures come from the Census Bureau's 2022 Government Units Listing and are primarily 2021 estimates.
 
