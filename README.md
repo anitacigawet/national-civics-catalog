@@ -4,11 +4,23 @@
 
 # National Civics Catalog
 
+## What is this?
+
 National Civics Catalog contains roster records for U.S. public bodies. A record includes a continuing meeting source when one has been identified and supported as first-party or authorized; otherwise it remains `needs_source` with no meeting-source claim.
 
 It does not contain individual meetings, agendas, minutes, recordings, transcripts, summaries, or parser code.
 
-## Current snapshot
+---
+
+## Who is this for?
+
+<!-- James will provide the wording for this section. -->
+
+---
+
+## What it actually does
+
+### Current snapshot
 
 The repository contains **38,707 catalog entries** across every U.S. state, the District of Columbia, and the five inhabited territories.
 
@@ -27,7 +39,7 @@ These records preserve roster identities when no meeting source is claimed. They
 
 The starting roster comes from the U.S. Census Bureau's 2022 Government Units Listing and covers active state, county, municipal, and township governments. It is a foundation, not a claim that every Tribal government, civic body, unincorporated community, special district, or newer government is already represented.
 
-## Browse the catalog
+### Browse the catalog
 
 State and territory files are newline-delimited JSON:
 
@@ -45,7 +57,7 @@ A source spanning more than one state is stored once under the alphabetically fi
 
 Version 2 replaced the ambiguous version 1 field names without changing any stable record ID value or catalog fact. See [`MIGRATING_V1_TO_V2.md`](MIGRATING_V1_TO_V2.md) for the exact mapping.
 
-## Understand a record
+### Understand a record
 
 Every entry uses the structure defined in [`schema.json`](schema.json). Important fields include:
 
@@ -71,7 +83,11 @@ The most important status distinction is:
 
 Inclusion means the meeting-source URL is first-party to, or an authorized service for, the named public body. It does not establish legal authority, endorsement, completeness, or continuing availability.
 
-## Build with it
+---
+
+## Running it locally
+
+### Build with it
 
 The JSONL files can be loaded with ordinary command-line tools, Python, JavaScript, databases, and data notebooks. For example, this Python snippet reads only entries that currently contain a meeting source:
 
@@ -91,7 +107,11 @@ print(f"Loaded {len(sources)} identified meeting sources")
 
 Catalog material released under CC0 may be copied, combined, redistributed, or used in commercial and noncommercial projects without separate permission.
 
-## Methodology
+---
+
+## ⚙️ Extreme technicals below
+
+### Methodology
 
 The catalog was built by defining a government roster, then researching
 continuing meeting sources for every body in that roster without removing
@@ -99,17 +119,17 @@ unresolved bodies. See the [human-readable methodology](methodology/README.md)
 or give [RESPAWN.md](methodology/RESPAWN.md) to an AI to adapt the process for
 another country.
 
-## Using linked material
+### Using linked material
 
 The catalog's CC0 dedication covers the catalog material that ScootSolute LLC and contributors have the right to dedicate. It does not grant rights to records, documents, media, software, personal information, or other content available through the sources it identifies.
 
 Rules governing access, reproduction, redistribution, and commercial use of linked material may differ by source and jurisdiction, including under applicable federal, state, Tribal, territorial, or local law and the source's own terms. Before using linked material—especially commercially—users are responsible for determining and complying with any applicable laws, licenses, terms, privacy obligations, and permission requirements. This notice provides general information only, not legal advice; consult a qualified attorney about a specific use.
 
-## Relationship to Z-SPAN
+### Relationship to Z-SPAN
 
 [Z-SPAN](https://zspan.org) is a separate application that consumes civic meeting-source data. Its parsers and application code live in another repository. National Civics Catalog contains only the source roster and metadata.
 
-## Contribute
+### Contribute
 
 Factual source suggestions, data corrections, and focused pull requests are welcome. The GitHub issue forms collect the public evidence needed to update an entry without requiring contributors to edit code.
 
@@ -119,11 +139,11 @@ If you are comfortable editing JSON, you can fill an existing `needs_source` pla
 
 Contributors are credited through Git history. Catalog contributions are released under CC0 so that everyone can reuse them freely; supporting software contributions are released under the MIT License. Contributing does not create ownership or control of the catalog.
 
-## Maintenance
+### Maintenance
 
 ScootSolute LLC maintains and reviews the catalog with help from contributors. Identified meeting sources submitted from outside the maintainer's completed review process enter as `unverified` until their evidence and behavior have been checked.
 
-## License
+### License
 
 ScootSolute LLC has released the catalog data, schema, metadata, documentation, and any protectable selection or arrangement it owns under the [CC0 1.0 Universal public-domain dedication](LICENSE). These materials may be used for any purpose, including commercial products, without separate permission or required attribution.
 
