@@ -78,11 +78,11 @@ class ContributionCheckTests(unittest.TestCase):
                 payload, encoding="utf-8", newline="\n"
             )
         self.base.joinpath("README.md").write_text(
-            """**56 catalog entries**
-**0 entries contain an identified meeting source.**
-**0 identified meeting sources have a status other than `unverified`.**
-**0 identified meeting sources have `meeting_source_status: "unverified"`.**
-**56 entries have `meeting_source_status: "needs_source"` and no meeting-source claim.**
+            """**56 catalog records**
+**0 records include an identified meeting endpoint.**
+**0 of those endpoints have been reviewed.**
+**0 identified endpoints are awaiting review.**
+**56 records do not yet have an identified meeting endpoint.**
 """,
             encoding="utf-8",
             newline="\n",
