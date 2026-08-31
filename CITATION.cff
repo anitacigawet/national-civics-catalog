@@ -2,13 +2,14 @@ cff-version: 1.2.0
 message: "If this source catalog helped your work, please cite it using this metadata."
 title: "National Civics Catalog"
 type: dataset
-version: "1.0.0"
+version: "2.0.0"
+date-released: 2026-08-30
 authors:
   - family-names: "Jones"
     given-names: "James"
 license: CC0-1.0
 repository-code: "https://github.com/anitacigawet/national-civics-catalog"
-abstract: "A national roster of public bodies and a state-by-state catalog of identified public-meeting sources."
+abstract: "A nationwide catalog of rostered U.S. public bodies and identified continuing public-meeting sources."
 keywords:
   - civic-data
   - tribal-government

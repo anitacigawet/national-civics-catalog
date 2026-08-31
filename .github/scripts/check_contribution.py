@@ -57,12 +57,14 @@ def records(path: Path) -> dict[str, dict[str, Any]]:
             value = json.loads(line)
         except json.JSONDecodeError as exc:
             raise ContributionError(f"{path.as_posix()}:{number}: invalid JSON: {exc}") from exc
-        source_id = value.get("source_id") if isinstance(value, dict) else None
-        if not isinstance(source_id, str):
-            raise ContributionError(f"{path.as_posix()}:{number}: missing source_id")
-        if source_id in found:
-            raise ContributionError(f"{path.as_posix()}:{number}: duplicate source_id {source_id}")
-        found[source_id] = value
+        catalog_record_id = value.get("catalog_record_id") if isinstance(value, dict) else None
+        if not isinstance(catalog_record_id, str):
+            raise ContributionError(f"{path.as_posix()}:{number}: missing catalog_record_id")
+        if catalog_record_id in found:
+            raise ContributionError(
+                f"{path.as_posix()}:{number}: duplicate catalog_record_id {catalog_record_id}"
+            )
+        found[catalog_record_id] = value
     return found
 
 
@@ -80,9 +82,12 @@ def run_check(base_root: Path, candidate_root: Path) -> str:
     base_tree = tree(base_root)
     candidate_tree = tree(candidate_root)
     changes = changed_paths(base_tree, candidate_tree)
-    if len(changes) != 1 or not STATE_FILE.fullmatch(changes[0]):
-        raise ContributionError("an outside contribution must change exactly one states/<code>.jsonl file")
-    state_path = changes[0]
+    state_paths = [path for path in changes if STATE_FILE.fullmatch(path)]
+    if len(state_paths) != 1 or set(changes) - {state_paths[0], "README.md"}:
+        raise ContributionError(
+            "an outside contribution may change one states/<code>.jsonl file and its generated README counts"
+        )
+    state_path = state_paths[0]
     entry = candidate_tree.get(state_path)
     if entry is None or entry[0] != "100644" or entry[1] != "blob":
         raise ContributionError("the changed state path must be an ordinary, non-executable file")
@@ -91,18 +96,51 @@ def run_check(base_root: Path, candidate_root: Path) -> str:
     count, errors = validator.validate_catalog(candidate_root)
     if errors:
         raise ContributionError("catalog validation failed:\n- " + "\n- ".join(errors))
+    readme_errors = validator.validate_readme_snapshot(candidate_root)
+    if readme_errors:
+        raise ContributionError(
+            "catalog validation failed:\n- " + "\n- ".join(readme_errors)
+        )
+    if "README.md" in changes:
+        readme_entry = candidate_tree.get("README.md")
+        if readme_entry is None or readme_entry[0] != "100644" or readme_entry[1] != "blob":
+            raise ContributionError("README.md must remain an ordinary, non-executable file")
+        expected_readme = validator.render_readme_snapshot(
+            (base_root / "README.md").read_text(encoding="utf-8"),
+            validator.snapshot_counts(candidate_root),
+        )
+        actual_readme = (candidate_root / "README.md").read_text(encoding="utf-8")
+        if actual_readme != expected_readme:
+            raise ContributionError(
+                "README.md may contain only validator-generated snapshot count changes"
+            )
 
     before = records(base_root / state_path)
     after = records(candidate_root / state_path)
-    changed_ids = sorted(source_id for source_id in set(before) | set(after) if before.get(source_id) != after.get(source_id))
+    changed_ids = sorted(
+        record_id
+        for record_id in set(before) | set(after)
+        if before.get(record_id) != after.get(record_id)
+    )
     if len(changed_ids) != 1:
         raise ContributionError("the state file must add or correct exactly one catalog entry")
-    source_id = changed_ids[0]
-    if source_id not in after:
+    catalog_record_id = changed_ids[0]
+    if catalog_record_id not in after:
         raise ContributionError("outside contributions may not delete catalog entries")
-    if source_id in before and before[source_id].get("source_id") != after[source_id].get("source_id"):
-        raise ContributionError("an existing source_id must be preserved")
-    if after[source_id].get("status") != "unverified":
+    if (
+        catalog_record_id in before
+        and before[catalog_record_id].get("catalog_record_id")
+        != after[catalog_record_id].get("catalog_record_id")
+    ):
+        raise ContributionError("an existing catalog_record_id must be preserved")
+    if (
+        catalog_record_id in before
+        and before[catalog_record_id].get("roster_source_url") is not None
+        and before[catalog_record_id].get("roster_source_url")
+        != after[catalog_record_id].get("roster_source_url")
+    ):
+        raise ContributionError("an existing roster_source_url must be preserved")
+    if after[catalog_record_id].get("meeting_source_status") != "unverified":
         raise ContributionError("an outside contribution must leave its changed entry marked unverified")
     return f"Ready for maintainer review: one entry changed; candidate catalog contains {count} entries."
 

@@ -3,10 +3,10 @@ description: Report an inaccurate, moved, broken, duplicated, or incomplete cata
 title: "Correction: "
 body:
   - type: input
-    id: source_id
+    id: catalog_record_id
     attributes:
-      label: Source ID
-      description: Copy the entry's source_id if you know it.
+      label: Catalog record ID
+      description: Copy the entry's catalog_record_id if you know it.
       placeholder: us-az-example--primary-meeting-source
   - type: input
     id: state_file
@@ -27,7 +27,7 @@ body:
     id: evidence_url
     attributes:
       label: Public evidence URL
-      description: Link to the first-party page supporting the correction when one is available.
+      description: Link to a public page supporting the correction.
       placeholder: https://...
     validations:
       required: true

@@ -1,8 +1,8 @@
 # Methodology
 
-National Civics Catalog was built in two distinct steps: first establish the
-complete shape of the catalog, then research the meeting source for every body
-in that shape. The project calls the first step the **stencil**.
+National Civics Catalog was built in two distinct steps: first define the roster
+in scope, then research each rostered body for a continuing meeting source. The
+project calls the first step the **stencil**.
 
 This separation matters. Search results do not decide which governments appear
 in the catalog. A difficult or unsuccessful search leaves an honest
@@ -21,9 +21,10 @@ government-unit roster. The stencil represents the rostered government, not
 each chamber, board, department, or committee inside it.
 
 Every in-scope government received a record before national source discovery
-began. The initial records carried the government's identity and geography but
-left source fields null. The roster, record count, identifiers, and source
-provenance were independently checked before the research queue was frozen.
+began. The initial records carried the government's identity, geography, and
+roster evidence while leaving the meeting-source fields null. The roster,
+record count, identifiers, and evidence were independently checked before the
+research queue was frozen.
 
 The Census roster is a documented starting boundary, not a claim that every
 possible civic body is represented. Tribal governments, special districts,
@@ -46,11 +47,11 @@ A single agenda, a single meeting notice, an unsupported search result, or a
 generic homepage is not enough. The endpoint must be operated by the public
 body or have evidence that it is an authorized publication channel.
 
-Researchers recorded the official website, exact endpoint, source type,
-platform, access method, relationship to the public body, observation date,
-and provenance. Webpage text was treated as untrusted evidence rather than as
-instructions. URLs were not guessed when the official source could not be
-established.
+Researchers recorded the public-body website, exact meeting-source URL, source
+type, platform, access method, relationship to the public body, observation
+date, and public evidence. Webpage text was treated as untrusted evidence
+rather than as instructions. URLs were not guessed when the official source
+could not be established.
 
 Research could end honestly without an identified endpoint. Blocked sites,
 ambiguous evidence, and bounded searches that found no qualifying source were
@@ -112,6 +113,5 @@ be given to an AI along with a country name. It preserves the stencil-first
 method without forcing another country into U.S.-specific concepts such as
 states, counties, or Census GEOIDs.
 
-Credentials, account details, worker identifiers, raw logs, review receipts,
-and other private operational evidence are deliberately excluded from this
-public methodology.
+This public methodology does not include credentials, account details, worker
+identifiers, raw logs, review receipts, or other private operational evidence.

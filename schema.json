@@ -1,33 +1,47 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/anitacigawet/national-civics-catalog/schema.json",
-  "title": "Civic source catalog entry",
+  "$id": "https://raw.githubusercontent.com/anitacigawet/national-civics-catalog/v2.0.0/schema.json",
+  "title": "National Civics Catalog record v2",
+  "description": "One rostered U.S. public body and, when identified, its continuing public-meeting source.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "source_id",
-    "publisher_name",
-    "publisher_type",
+    "schema_version",
+    "catalog_record_id",
+    "public_body_name",
+    "public_body_type",
     "state_codes",
     "county_names",
-    "official_website_url",
-    "endpoint_type",
-    "url",
-    "platform",
-    "access_method",
-    "source_relationship",
-    "status",
-    "last_checked",
-    "provenance_url",
-    "covers"
+    "public_body_website_url",
+    "roster_source_url",
+    "meeting_source_type",
+    "meeting_source_url",
+    "meeting_source_platform",
+    "meeting_source_access_method",
+    "meeting_source_relationship",
+    "meeting_source_status",
+    "meeting_source_last_checked_date",
+    "meeting_source_evidence_url",
+    "coverage"
   ],
   "properties": {
-    "source_id": {
+    "schema_version": {
+      "description": "Schema version used by this standalone JSONL record.",
+      "const": "2.0.0"
+    },
+    "catalog_record_id": {
+      "description": "Stable identifier for this catalog record. It is not a government identifier.",
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
     },
-    "publisher_name": { "type": "string", "minLength": 1, "maxLength": 200 },
-    "publisher_type": {
+    "public_body_name": {
+      "description": "Public name of the government or civic body represented by this record.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "public_body_type": {
+      "description": "Kind of public body represented by this record.",
       "enum": [
         "state",
         "county",
@@ -43,23 +57,34 @@
       ]
     },
     "state_codes": {
+      "description": "Two-letter U.S. postal codes used to place the record geographically.",
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
       "items": { "type": "string", "pattern": "^[A-Z]{2}$" }
     },
     "county_names": {
+      "description": "County or county-equivalent names used to place the record geographically.",
       "type": "array",
       "uniqueItems": true,
       "items": { "type": "string", "minLength": 1, "maxLength": 150 }
     },
-    "official_website_url": {
+    "public_body_website_url": {
+      "description": "Official website for the public body when one has been identified.",
       "anyOf": [
         { "type": "null" },
-        { "type": "string", "pattern": "^https://" }
+        { "type": "string", "pattern": "^https://", "maxLength": 2048 }
       ]
     },
-    "endpoint_type": {
+    "roster_source_url": {
+      "description": "Authoritative source used to support the public body's roster entry when that evidence is retained on the record.",
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^https://", "maxLength": 2048 }
+      ]
+    },
+    "meeting_source_type": {
+      "description": "Kind of continuing public-meeting collection represented by the source.",
       "anyOf": [
         { "type": "null" },
         {
@@ -77,72 +102,89 @@
         }
       ]
     },
-    "url": {
+    "meeting_source_url": {
+      "description": "URL of the continuing public-meeting collection, or null when no source is claimed.",
       "anyOf": [
         { "type": "null" },
         { "type": "string", "pattern": "^https://", "maxLength": 2048 }
       ]
     },
-    "platform": {
+    "meeting_source_platform": {
+      "description": "Publishing platform or website system used by the meeting source.",
       "anyOf": [
         { "type": "null" },
         { "type": "string", "minLength": 1, "maxLength": 100 }
       ]
     },
-    "access_method": {
+    "meeting_source_access_method": {
+      "description": "How the continuing source is exposed, such as an HTML page, feed, API, or PDF index.",
       "anyOf": [
         { "type": "null" },
         { "enum": ["html", "json", "rss", "ical", "api", "pdf_index", "other"] }
       ]
     },
-    "source_relationship": {
+    "meeting_source_relationship": {
+      "description": "Whether the source is published by the body itself or by an authorized service.",
       "anyOf": [
         { "type": "null" },
         { "enum": ["first_party", "authorized_service"] }
       ]
     },
-    "status": {
+    "meeting_source_status": {
+      "description": "Recorded discovery, review, or observed condition of the meeting source.",
       "enum": ["needs_source", "working", "empty", "blocked", "broken", "moved", "retired", "unverified"]
     },
-    "last_checked": {
+    "meeting_source_last_checked_date": {
+      "description": "Most recent recorded observation date for an identified meeting source.",
       "anyOf": [
         { "type": "null" },
         { "type": "string", "format": "date" }
       ]
     },
-    "provenance_url": { "type": "string", "pattern": "^https://", "maxLength": 2048 },
-    "covers": {
+    "meeting_source_evidence_url": {
+      "description": "Public evidence that the body operates or authorizes the identified meeting source.",
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^https://", "maxLength": 2048 }
+      ]
+    },
+    "coverage": {
+      "description": "Jurisdictions, districts, communities, or other civic areas represented by this record.",
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "#/$defs/coveredPlace" }
+      "items": { "$ref": "#/$defs/coverageItem" }
     }
   },
   "allOf": [
     {
-      "if": { "properties": { "status": { "const": "needs_source" } } },
+      "if": { "properties": { "meeting_source_status": { "const": "needs_source" } } },
       "then": {
         "properties": {
-          "endpoint_type": { "const": null },
-          "url": { "const": null },
-          "platform": { "const": null },
-          "access_method": { "const": null },
-          "source_relationship": { "const": null },
-          "last_checked": { "const": null }
+          "roster_source_url": { "type": "string" },
+          "meeting_source_type": { "const": null },
+          "meeting_source_url": { "const": null },
+          "meeting_source_platform": { "const": null },
+          "meeting_source_access_method": { "const": null },
+          "meeting_source_relationship": { "const": null },
+          "meeting_source_last_checked_date": { "const": null },
+          "meeting_source_evidence_url": { "const": null }
         }
       },
       "else": {
         "properties": {
-          "endpoint_type": { "type": "string" },
-          "url": { "type": "string" },
-          "platform": { "type": "string" },
-          "access_method": { "type": "string" },
-          "source_relationship": { "type": "string" }
+          "meeting_source_type": { "type": "string" },
+          "meeting_source_url": { "type": "string" },
+          "meeting_source_platform": { "type": "string" },
+          "meeting_source_access_method": { "type": "string" },
+          "meeting_source_relationship": { "type": "string" },
+          "meeting_source_last_checked_date": { "type": "string" },
+          "meeting_source_evidence_url": { "type": "string" }
         }
       }
     }
   ],
   "$defs": {
-    "coveredPlace": {
+    "coverageItem": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -150,13 +192,19 @@
         "type",
         "state_codes",
         "county_names",
-        "relationship",
+        "coverage_relationship",
         "ocd_division_id",
         "census_geoid"
       ],
       "properties": {
-        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "name": {
+          "description": "Name of the represented jurisdiction, district, community, or civic area.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
         "type": {
+          "description": "Kind of jurisdiction, district, community, or civic area.",
           "enum": [
             "state",
             "county",
@@ -181,7 +229,8 @@
           "uniqueItems": true,
           "items": { "type": "string", "minLength": 1, "maxLength": 150 }
         },
-        "relationship": {
+        "coverage_relationship": {
+          "description": "Why this coverage item is represented by the catalog record.",
           "enum": ["direct_jurisdiction", "governing_parent", "civic_representation", "regional_service"]
         },
         "ocd_division_id": {

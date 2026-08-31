@@ -2,7 +2,7 @@
 
 ## Open Civic Data Division Identifiers
 
-Some `covers[].ocd_division_id` values are derived from
+Some `coverage[].ocd_division_id` values are derived from
 [`opencivicdata/ocd-division-ids`](https://github.com/opencivicdata/ocd-division-ids),
 specifically `identifiers/country-us.csv` at revision
 [`b5911539ae7f79b5edf6b301c8002bb3db3e3e87`](https://github.com/opencivicdata/ocd-division-ids/commit/b5911539ae7f79b5edf6b301c8002bb3db3e3e87).

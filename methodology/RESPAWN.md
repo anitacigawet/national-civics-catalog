@@ -97,17 +97,17 @@ public body. This is the stencil that later research will fill.
 
 Use a small, country-appropriate schema built around these concepts:
 
-- stable source identifier;
+- stable catalog-record identifier;
 - public-body name and type;
 - country and jurisdiction hierarchy;
 - authoritative roster identifier;
-- official website;
-- continuing-source type and URL;
-- platform and access method;
-- first-party or authorized relationship;
-- review status and last-checked date;
-- provenance URL; and
-- the bodies or territory covered by the source.
+- public-body website and roster-source URL;
+- meeting-source type and URL;
+- meeting-source platform and access method;
+- meeting-source relationship to the public body;
+- meeting-source status and last-checked date;
+- meeting-source evidence URL; and
+- the jurisdictions, districts, communities, or other civic areas represented by the record.
 
 Use an authoritative roster identifier verbatim whenever one exists. Do not
 invent a value that looks like an official code. If a foundational roster has no
@@ -120,10 +120,12 @@ but they must not replace a government-unit identifier when the authoritative
 government roster provides one.
 
 Start every record as `needs_source`. Represent unknown values with JSON `null`,
-not empty strings. Until a source is identified, the continuing-source type and
-URL, platform, access method, source relationship, and last-checked date must all
-remain null. An official website or roster-provenance URL may be present when an
-authoritative source establishes it; otherwise it is null too.
+not empty strings. Until a source is identified, the meeting-source type, URL,
+platform, access method, relationship, last-checked date, and evidence URL must
+all remain null. A public-body website or roster-source URL may be present when
+an authoritative source establishes it; otherwise it is null too. Do not use
+one generic provenance field for both roster evidence and meeting-source
+evidence.
 
 Validate that authoritative identifiers are unique and that every in-scope
 roster row appears exactly once. Independently audit the counts, identifiers,

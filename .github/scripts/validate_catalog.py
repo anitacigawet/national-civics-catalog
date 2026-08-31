@@ -19,16 +19,19 @@ ROOT = Path(__file__).resolve().parents[2]
 STATES = ROOT / "states"
 
 SOURCE_FIELDS = (
-    "source_id", "publisher_name", "publisher_type", "state_codes",
-    "county_names", "official_website_url", "endpoint_type", "url",
-    "platform", "access_method", "source_relationship", "status",
-    "last_checked", "provenance_url", "covers",
+    "schema_version", "catalog_record_id", "public_body_name",
+    "public_body_type", "state_codes", "county_names",
+    "public_body_website_url", "roster_source_url", "meeting_source_type",
+    "meeting_source_url", "meeting_source_platform",
+    "meeting_source_access_method", "meeting_source_relationship",
+    "meeting_source_status", "meeting_source_last_checked_date",
+    "meeting_source_evidence_url", "coverage",
 )
 COVER_FIELDS = (
-    "name", "type", "state_codes", "county_names", "relationship",
+    "name", "type", "state_codes", "county_names", "coverage_relationship",
     "ocd_division_id", "census_geoid",
 )
-PUBLISHER_TYPES = {
+PUBLIC_BODY_TYPES = {
     "state", "county", "municipality", "township", "school_district",
     "special_district", "tribal_government", "tribal_chapter",
     "community_council", "civic_body", "other",
@@ -38,13 +41,13 @@ PLACE_TYPES = {
     "school_district", "special_district", "tribal_jurisdiction",
     "tribal_chapter", "other",
 }
-ENDPOINT_TYPES = {
+MEETING_SOURCE_TYPES = {
     "primary_meeting_source", "meeting_calendar", "agenda_index",
     "minutes_index", "public_notices_index", "video_archive", "api", "feed",
     "other",
 }
 ACCESS_METHODS = {"html", "json", "rss", "ical", "api", "pdf_index", "other"}
-SOURCE_RELATIONSHIPS = {"first_party", "authorized_service"}
+MEETING_SOURCE_RELATIONSHIPS = {"first_party", "authorized_service"}
 STATUSES = {"needs_source", "working", "empty", "blocked", "broken", "moved", "retired", "unverified"}
 RELATIONSHIPS = {"direct_jurisdiction", "governing_parent", "civic_representation", "regional_service"}
 USPS_CODES = {
@@ -54,15 +57,15 @@ USPS_CODES = {
     "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "RI",
     "SC", "SD", "TN", "TX", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY",
 }
-SOURCE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
+CATALOG_RECORD_ID = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 CENSUS_GEOID = re.compile(r"^[0-9]{2,15}$")
 MAX_PERCENT_DECODE_ROUNDS = 3
 SNAPSHOT_PATTERNS = {
     "total": re.compile(r"\*\*([0-9,]+) catalog entries\*\*"),
-    "identified": re.compile(r"\*\*([0-9,]+) entries contain identified meeting-source endpoints\.\*\*"),
-    "reviewed": re.compile(r"\*\*([0-9,]+) of those endpoints have completed an initial review\.\*\*"),
-    "unverified": re.compile(r"\*\*([0-9,]+) are clearly marked `unverified` while review is pending\.\*\*"),
-    "needs_source": re.compile(r"\*\*([0-9,]+) entries are intentional research placeholders\*\*"),
+    "identified": re.compile(r"\*\*([0-9,]+) entries contain an identified meeting source\.\*\*"),
+    "not_unverified": re.compile(r"\*\*([0-9,]+) identified meeting sources have a status other than `unverified`\.\*\*"),
+    "unverified": re.compile(r"\*\*([0-9,]+) identified meeting sources have `meeting_source_status: \"unverified\"`\.\*\*"),
+    "needs_source": re.compile(r"\*\*([0-9,]+) entries have `meeting_source_status: \"needs_source\"` and no meeting-source claim\.\*\*"),
 }
 
 
@@ -94,6 +97,15 @@ def validate_url_encoding(value: str, label: str) -> list[str]:
                 f"{label} contains Unicode format characters after percent-decoding: "
                 + ", ".join(format_characters)
             ]
+        if any(
+            unicodedata.category(character) in {"Cc", "Cs"}
+            or (
+                character.isspace()
+                and (decode_round == 0 or character != " ")
+            )
+            for character in current
+        ):
+            return [f"{label} contains whitespace or control characters after percent-decoding"]
         decoded = unquote(current)
         if decoded == current:
             return []
@@ -119,17 +131,37 @@ def validate_url(value: Any, label: str, *, nullable: bool = False) -> list[str]
         return errors + [f"{label} is invalid: {exc}"]
     if parsed.scheme != "https" or not parsed.hostname or port not in (None, 443):
         errors.append(f"{label} must use HTTPS, a DNS hostname, and the default port")
+    if parsed.hostname is None:
+        return errors
     if parsed.username is not None or parsed.password is not None:
         errors.append(f"{label} must not contain credentials")
     try:
         ipaddress.ip_address(parsed.hostname)
     except ValueError:
+        try:
+            ascii_hostname = parsed.hostname.encode("idna").decode("ascii")
+        except UnicodeError:
+            errors.append(f"{label} contains an invalid DNS hostname")
+            return errors
+        dns_label = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?$")
+        if (
+            len(ascii_hostname) > 253
+            or ascii_hostname.endswith(".")
+            or any(not dns_label.fullmatch(part) for part in ascii_hostname.split("."))
+        ):
+            errors.append(f"{label} contains an invalid DNS hostname")
         return errors
     errors.append(f"{label} must use a DNS hostname, not an IP address")
     return errors
 
 
-def validate_string_list(value: Any, label: str, *, required: bool = False) -> list[str]:
+def validate_string_list(
+    value: Any,
+    label: str,
+    *,
+    required: bool = False,
+    max_length: int | None = None,
+) -> list[str]:
     if not isinstance(value, list) or (required and not value):
         return [f"{label} must be {'a non-empty' if required else 'an'} array"]
     errors: list[str] = []
@@ -137,6 +169,8 @@ def validate_string_list(value: Any, label: str, *, required: bool = False) -> l
         errors.append(f"{label} entries must be non-empty, trimmed strings")
     if not all(isinstance(item, str) for item in value):
         return errors
+    if max_length is not None and any(len(item) > max_length for item in value):
+        errors.append(f"{label} entries must be at most {max_length} characters")
     if len(value) != len(set(value)):
         errors.append(f"{label} must not contain duplicates")
     if value != sorted(value, key=lambda item: (item.casefold(), item)):
@@ -156,14 +190,23 @@ def validate_cover(cover: Any, label: str) -> list[str]:
         or not 1 <= len(cover["name"]) <= 200
     ):
         errors.append(f"{label}.name must be a trimmed string of 1-200 characters")
-    if cover["type"] not in PLACE_TYPES:
+    if not isinstance(cover["type"], str) or cover["type"] not in PLACE_TYPES:
         errors.append(f"{label}.type is unsupported")
     errors += validate_string_list(cover["state_codes"], f"{label}.state_codes", required=True)
-    if isinstance(cover["state_codes"], list) and set(cover["state_codes"]) - USPS_CODES:
+    if (
+        isinstance(cover["state_codes"], list)
+        and all(isinstance(item, str) for item in cover["state_codes"])
+        and set(cover["state_codes"]) - USPS_CODES
+    ):
         errors.append(f"{label}.state_codes contains an unsupported code")
-    errors += validate_string_list(cover["county_names"], f"{label}.county_names")
-    if cover["relationship"] not in RELATIONSHIPS:
-        errors.append(f"{label}.relationship is unsupported")
+    errors += validate_string_list(
+        cover["county_names"], f"{label}.county_names", max_length=150
+    )
+    if (
+        not isinstance(cover["coverage_relationship"], str)
+        or cover["coverage_relationship"] not in RELATIONSHIPS
+    ):
+        errors.append(f"{label}.coverage_relationship is unsupported")
     ocd = cover["ocd_division_id"]
     if ocd is not None and (not isinstance(ocd, str) or not ocd.startswith("ocd-division/")):
         errors.append(f"{label}.ocd_division_id must be null or an OCD division ID")
@@ -179,63 +222,104 @@ def validate_record(record: Any, label: str, state_code: str) -> list[str]:
     if tuple(record) != SOURCE_FIELDS:
         return [f"{label}: record must contain the schema fields in canonical order"]
     errors: list[str] = []
-    source_id = record["source_id"]
-    if not isinstance(source_id, str) or not SOURCE_ID.fullmatch(source_id):
-        errors.append(f"{label}: source_id must be a lowercase, hyphenated stable ID")
+    if record["schema_version"] != "2.0.0":
+        errors.append(f"{label}: schema_version must be 2.0.0")
+    catalog_record_id = record["catalog_record_id"]
+    if not isinstance(catalog_record_id, str) or not CATALOG_RECORD_ID.fullmatch(catalog_record_id):
+        errors.append(f"{label}: catalog_record_id must be a lowercase, hyphenated stable ID")
     if (
-        not isinstance(record["publisher_name"], str)
-        or record["publisher_name"] != record["publisher_name"].strip()
-        or not 1 <= len(record["publisher_name"]) <= 200
+        not isinstance(record["public_body_name"], str)
+        or record["public_body_name"] != record["public_body_name"].strip()
+        or not 1 <= len(record["public_body_name"]) <= 200
     ):
-        errors.append(f"{label}: publisher_name must be a trimmed string of 1-200 characters")
-    if record["publisher_type"] not in PUBLISHER_TYPES:
-        errors.append(f"{label}: publisher_type is unsupported")
+        errors.append(f"{label}: public_body_name must be a trimmed string of 1-200 characters")
+    if (
+        not isinstance(record["public_body_type"], str)
+        or record["public_body_type"] not in PUBLIC_BODY_TYPES
+    ):
+        errors.append(f"{label}: public_body_type is unsupported")
     errors += validate_string_list(record["state_codes"], f"{label}: state_codes", required=True)
     if isinstance(record["state_codes"], list):
-        if set(record["state_codes"]) - USPS_CODES:
-            errors.append(f"{label}: state_codes contains an unsupported code")
-        if record["state_codes"] and record["state_codes"][0].lower() != state_code:
-            errors.append(f"{label}: record belongs in states/{record['state_codes'][0].lower()}.jsonl")
-    errors += validate_string_list(record["county_names"], f"{label}: county_names")
-    errors += validate_url(record["official_website_url"], f"{label}: official_website_url", nullable=True)
-    errors += validate_url(record["provenance_url"], f"{label}: provenance_url")
-
-    status = record["status"]
-    if status not in STATUSES:
-        errors.append(f"{label}: status is unsupported")
-    endpoint_fields = ("endpoint_type", "url", "platform", "access_method", "source_relationship")
-    if status == "needs_source":
-        for field in (*endpoint_fields, "last_checked"):
-            if record[field] is not None:
-                errors.append(f"{label}: {field} must be null while status is needs_source")
-    else:
-        if record["endpoint_type"] not in ENDPOINT_TYPES:
-            errors.append(f"{label}: endpoint_type is unsupported")
-        errors += validate_url(record["url"], f"{label}: url")
         if (
-            not isinstance(record["platform"], str)
-            or record["platform"] != record["platform"].strip()
-            or not 1 <= len(record["platform"]) <= 100
+            all(isinstance(item, str) for item in record["state_codes"])
+            and set(record["state_codes"]) - USPS_CODES
         ):
-            errors.append(f"{label}: platform must be a trimmed string of 1-100 characters")
-        if record["access_method"] not in ACCESS_METHODS:
-            errors.append(f"{label}: access_method is unsupported")
-        if record["source_relationship"] not in SOURCE_RELATIONSHIPS:
-            errors.append(f"{label}: source_relationship is unsupported")
-        checked = record["last_checked"]
-        if checked is not None:
-            try:
-                if not isinstance(checked, str) or date.fromisoformat(checked).isoformat() != checked:
-                    raise ValueError
-            except ValueError:
-                errors.append(f"{label}: last_checked must be null or YYYY-MM-DD")
-
-    covers = record["covers"]
-    if not isinstance(covers, list) or not covers:
-        errors.append(f"{label}: covers must be a non-empty array")
+            errors.append(f"{label}: state_codes contains an unsupported code")
+        if (
+            record["state_codes"]
+            and isinstance(record["state_codes"][0], str)
+            and record["state_codes"][0].lower() != state_code
+        ):
+            errors.append(f"{label}: record belongs in states/{record['state_codes'][0].lower()}.jsonl")
+    errors += validate_string_list(
+        record["county_names"], f"{label}: county_names", max_length=150
+    )
+    errors += validate_url(
+        record["public_body_website_url"],
+        f"{label}: public_body_website_url",
+        nullable=True,
+    )
+    errors += validate_url(record["roster_source_url"], f"{label}: roster_source_url", nullable=True)
+    status = record["meeting_source_status"]
+    if not isinstance(status, str) or status not in STATUSES:
+        errors.append(f"{label}: meeting_source_status is unsupported")
+    meeting_source_fields = (
+        "meeting_source_type", "meeting_source_url", "meeting_source_platform",
+        "meeting_source_access_method", "meeting_source_relationship",
+        "meeting_source_last_checked_date", "meeting_source_evidence_url",
+    )
+    if status == "needs_source":
+        if record["roster_source_url"] is None:
+            errors.append(f"{label}: roster_source_url is required while meeting_source_status is needs_source")
+        for field in meeting_source_fields:
+            if record[field] is not None:
+                errors.append(
+                    f"{label}: {field} must be null while meeting_source_status is needs_source"
+                )
     else:
-        for index, cover in enumerate(covers):
-            errors += validate_cover(cover, f"{label}.covers[{index}]")
+        if (
+            not isinstance(record["meeting_source_type"], str)
+            or record["meeting_source_type"] not in MEETING_SOURCE_TYPES
+        ):
+            errors.append(f"{label}: meeting_source_type is unsupported")
+        errors += validate_url(record["meeting_source_url"], f"{label}: meeting_source_url")
+        if (
+            not isinstance(record["meeting_source_platform"], str)
+            or record["meeting_source_platform"] != record["meeting_source_platform"].strip()
+            or not 1 <= len(record["meeting_source_platform"]) <= 100
+        ):
+            errors.append(
+                f"{label}: meeting_source_platform must be a trimmed string of 1-100 characters"
+            )
+        if (
+            not isinstance(record["meeting_source_access_method"], str)
+            or record["meeting_source_access_method"] not in ACCESS_METHODS
+        ):
+            errors.append(f"{label}: meeting_source_access_method is unsupported")
+        if (
+            not isinstance(record["meeting_source_relationship"], str)
+            or record["meeting_source_relationship"] not in MEETING_SOURCE_RELATIONSHIPS
+        ):
+            errors.append(f"{label}: meeting_source_relationship is unsupported")
+        errors += validate_url(
+            record["meeting_source_evidence_url"],
+            f"{label}: meeting_source_evidence_url",
+        )
+        checked = record["meeting_source_last_checked_date"]
+        try:
+            if not isinstance(checked, str) or date.fromisoformat(checked).isoformat() != checked:
+                raise ValueError
+        except ValueError:
+            errors.append(
+                f"{label}: meeting_source_last_checked_date must be YYYY-MM-DD for an identified source"
+            )
+
+    coverage = record["coverage"]
+    if not isinstance(coverage, list) or not coverage:
+        errors.append(f"{label}: coverage must be a non-empty array")
+    else:
+        for index, cover in enumerate(coverage):
+            errors += validate_cover(cover, f"{label}.coverage[{index}]")
     return errors
 
 
@@ -276,16 +360,20 @@ def validate_catalog(root: Path = ROOT) -> tuple[int, list[str]]:
                 errors.append(f"{label}: invalid JSON: {exc}")
                 continue
             errors += validate_record(record, label, state_code)
-            source_id = record.get("source_id") if isinstance(record, dict) else None
-            if isinstance(source_id, str):
-                if source_id in seen:
-                    errors.append(f"{label}: source_id duplicates {seen[source_id]}")
+            catalog_record_id = record.get("catalog_record_id") if isinstance(record, dict) else None
+            if isinstance(catalog_record_id, str):
+                if catalog_record_id in seen:
+                    errors.append(
+                        f"{label}: catalog_record_id duplicates {seen[catalog_record_id]}"
+                    )
                 else:
-                    seen[source_id] = label
-                file_ids.append(source_id)
+                    seen[catalog_record_id] = label
+                file_ids.append(catalog_record_id)
             total += 1
         if file_ids != sorted(file_ids):
-            errors.append(f"{path.relative_to(root).as_posix()}: records must be sorted by source_id")
+            errors.append(
+                f"{path.relative_to(root).as_posix()}: records must be sorted by catalog_record_id"
+            )
     return total, errors
 
 
@@ -297,14 +385,14 @@ def snapshot_counts(root: Path) -> dict[str, int]:
         for line in path.read_text(encoding="utf-8").splitlines():
             record = json.loads(line)
             total += 1
-            statuses[record["status"]] += 1
-            if record["url"] is not None:
+            statuses[record["meeting_source_status"]] += 1
+            if record["meeting_source_url"] is not None:
                 identified += 1
     unverified = statuses["unverified"]
     return {
         "total": total,
         "identified": identified,
-        "reviewed": identified - unverified,
+        "not_unverified": identified - unverified,
         "unverified": unverified,
         "needs_source": statuses["needs_source"],
     }
@@ -330,10 +418,7 @@ def validate_readme_snapshot(root: Path) -> list[str]:
     return errors
 
 
-def update_readme_snapshot(root: Path) -> None:
-    readme = root / "README.md"
-    text = readme.read_text(encoding="utf-8")
-    expected = snapshot_counts(root)
+def render_readme_snapshot(text: str, expected: dict[str, int]) -> str:
     for key, pattern in SNAPSHOT_PATTERNS.items():
         matches = list(pattern.finditer(text))
         if len(matches) != 1:
@@ -341,6 +426,15 @@ def update_readme_snapshot(root: Path) -> None:
         match = matches[0]
         replacement = match.group(0).replace(match.group(1), f"{expected[key]:,}")
         text = text[: match.start()] + replacement + text[match.end() :]
+    return text
+
+
+def update_readme_snapshot(root: Path) -> None:
+    readme = root / "README.md"
+    text = render_readme_snapshot(
+        readme.read_text(encoding="utf-8"),
+        snapshot_counts(root),
+    )
     readme.write_text(text, encoding="utf-8", newline="\n")
 
 

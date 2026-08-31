@@ -4,7 +4,7 @@
 
 # National Civics Catalog
 
-National Civics Catalog lists U.S. public bodies and the official or authorized pages they use to publish meeting information. Records without an identified source remain visible as `needs_source` instead of being omitted.
+National Civics Catalog contains roster records for U.S. public bodies. A record includes a continuing meeting source when one has been identified and supported as first-party or authorized; otherwise it remains `needs_source` with no meeting-source claim.
 
 It does not contain individual meetings, agendas, minutes, recordings, transcripts, summaries, or parser code.
 
@@ -12,12 +12,12 @@ It does not contain individual meetings, agendas, minutes, recordings, transcrip
 
 The repository contains **38,707 catalog entries** across every U.S. state, the District of Columbia, and the five inhabited territories.
 
-- **21,319 entries contain identified meeting-source endpoints.**
-- **20,085 of those endpoints have completed an initial review.**
-- **1,234 are clearly marked `unverified` while review is pending.**
-- **17,388 entries are intentional research placeholders** with `status: "needs_source"` and no claimed endpoint.
+- **21,319 entries contain an identified meeting source.**
+- **20,085 identified meeting sources have a status other than `unverified`.**
+- **1,234 identified meeting sources have `meeting_source_status: "unverified"`.**
+- **17,388 entries have `meeting_source_status: "needs_source"` and no meeting-source claim.**
 
-The placeholders are part of the product. They preserve the national roster and a stable record shape while the catalog is filled in. They should not be read as discovered sources or working links.
+These records preserve roster identities when no meeting source is claimed. They are not discovered sources or working links, and `needs_source` alone does not encode the record's search history.
 
 > ### Transparency: where no continuing source was found
 >
@@ -39,34 +39,41 @@ states/
   ny.jsonl
 ```
 
-Each line is one catalog entry. Records are sorted by `source_id`.
+Each line is one catalog entry using schema version `2.0.0`. Records are sorted by `catalog_record_id`.
 
-A source spanning more than one state is stored once under the alphabetically first state code in its `state_codes` list. Consumers should use each record's full `state_codes` and `covers` values rather than treating its filename as its only geography.
+A source spanning more than one state is stored once under the alphabetically first state code in its `state_codes` list. Consumers should use each record's full `state_codes` and `coverage` values rather than treating its filename as its only geography.
+
+Version 2 replaced the ambiguous version 1 field names without changing any stable record ID value or catalog fact. See [`MIGRATING_V1_TO_V2.md`](MIGRATING_V1_TO_V2.md) for the exact mapping.
 
 ## Understand a record
 
 Every entry uses the structure defined in [`schema.json`](schema.json). Important fields include:
 
-- `source_id`: stable identifier for the catalog entry;
-- `publisher_name` and `publisher_type`: the body publishing or authorizing the source;
+- `schema_version`: schema used by the standalone JSONL record;
+- `catalog_record_id`: stable identifier for the catalog entry, not a government identifier;
+- `public_body_name` and `public_body_type`: the government or civic body represented by the record;
 - `state_codes` and `county_names`: geographic placement;
-- `url`: the continuing meeting source, or `null` while research is incomplete;
-- `endpoint_type`, `platform`, and `access_method`: what kind of source it is and how it is published;
-- `status`: its current research or review state;
-- `last_checked` and `provenance_url`: when it was checked and the first-party evidence supporting it; and
-- `covers`: the places or jurisdictions represented by the source.
+- `public_body_website_url`: the body's official website when identified;
+- `roster_source_url`: authoritative roster evidence retained for a body with no claimed meeting source;
+- `meeting_source_url`: the continuing meeting source, or `null` when no source is claimed;
+- `meeting_source_type`, `meeting_source_platform`, and `meeting_source_access_method`: what kind of source it is and how it is published;
+- `meeting_source_relationship`: whether the source is first-party or an authorized service;
+- `meeting_source_status`: whether no source is claimed, review is pending, or a checked source was working, empty, blocked, broken, moved, or retired;
+- `meeting_source_last_checked_date`: the most recent recorded observation date;
+- `meeting_source_evidence_url`: public evidence that the body operates or authorizes the identified source; and
+- `coverage`: the jurisdictions, districts, communities, or other civic areas represented by the record.
 
 The most important status distinction is:
 
-- `needs_source` means the national roster entry exists, but no continuing source has been identified yet.
-- `unverified` means an endpoint has been identified but has not completed ordinary catalog review.
-- `working`, `empty`, `blocked`, `broken`, `moved`, and `retired` describe the result of a completed check.
+- `needs_source` means the record makes no meeting-source claim. It does not say whether research is pending or a bounded search ended without a qualifying source.
+- `unverified` means a meeting source is recorded but maintainer review is pending.
+- `working`, `empty`, `blocked`, `broken`, `moved`, and `retired` record the result of a completed check as of `meeting_source_last_checked_date`; they do not guarantee current availability.
 
-Inclusion means the URL is first-party to, or an authorized service for, the named publisher. It does not establish legal authority, endorsement, completeness, or continuing availability.
+Inclusion means the meeting-source URL is first-party to, or an authorized service for, the named public body. It does not establish legal authority, endorsement, completeness, or continuing availability.
 
 ## Build with it
 
-The JSONL files can be loaded with ordinary command-line tools, Python, JavaScript, databases, and data notebooks. For example, this Python snippet reads only entries that currently contain an endpoint:
+The JSONL files can be loaded with ordinary command-line tools, Python, JavaScript, databases, and data notebooks. For example, this Python snippet reads only entries that currently contain a meeting source:
 
 ```python
 import json
@@ -76,19 +83,19 @@ sources = []
 for state_file in Path("states").glob("*.jsonl"):
     for line in state_file.read_text(encoding="utf-8").splitlines():
         record = json.loads(line)
-        if record["url"] is not None:
+        if record["meeting_source_url"] is not None:
             sources.append(record)
 
-print(f"Loaded {len(sources)} identified endpoints")
+print(f"Loaded {len(sources)} identified meeting sources")
 ```
 
 Catalog material released under CC0 may be copied, combined, redistributed, or used in commercial and noncommercial projects without separate permission.
 
 ## Methodology
 
-The catalog was built by deriving a complete government roster first, then
-researching and independently reviewing continuing meeting sources without
-removing unresolved governments. See the [human-readable methodology](methodology/README.md)
+The catalog was built by defining a government roster, then researching
+continuing meeting sources for every body in that roster without removing
+unresolved bodies. See the [human-readable methodology](methodology/README.md)
 or give [RESPAWN.md](methodology/RESPAWN.md) to an AI to adapt the process for
 another country.
 
@@ -100,7 +107,7 @@ Rules governing access, reproduction, redistribution, and commercial use of link
 
 ## Relationship to Z-SPAN
 
-[Z-SPAN](https://zspan.org) is a separate application that turns civic meeting sources into a public virtual library. Z-SPAN maintains its parsers and application code in its own repository. National Civics Catalog remains application-agnostic and contains only the source roster and its metadata.
+[Z-SPAN](https://zspan.org) is a separate application that consumes civic meeting-source data. Its parsers and application code live in another repository. National Civics Catalog contains only the source roster and metadata.
 
 ## Contribute
 
@@ -114,7 +121,7 @@ Contributors are credited through Git history. Catalog contributions are release
 
 ## Maintenance
 
-ScootSolute LLC maintains and reviews the catalog with help from contributors. Identified endpoints submitted from outside the maintainer's completed review process enter as `unverified` until their evidence and behavior have been checked.
+ScootSolute LLC maintains and reviews the catalog with help from contributors. Identified meeting sources submitted from outside the maintainer's completed review process enter as `unverified` until their evidence and behavior have been checked.
 
 ## License
 
