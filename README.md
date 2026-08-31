@@ -6,40 +6,52 @@
 
 ## What is this?
 
-The National Civics Catalog is a nationwide directory of official endpoints where states, counties, cities, towns, and township governments publish their meeting calendars, agendas, minutes, notices, and recordings. Each link leads to either the government itself or to the service that it officially uses.
+The National Civics Catalog is a nationwide directory of endpoints where states, counties, cities, and towns publish their meeting calendars, agendas, minutes, notices, and recordings. Each listed endpoint belongs either to the government itself or to the official service or vendor it uses.
 
 ---
 
 ## Who is this for?
 
-- People trying to find a government's official meeting calendar, agendas, minutes, notices, or recordings.
-- Journalists and researchers comparing access to meeting information across states and local governments.
-- Developers building civic tools that need a consistent list of official meeting endpoints.
-- Contributors correcting a missing, broken, or moved government link.
+- **Developers**
+
+  Anyone building civic tools that need a consistently updated list of official meeting endpoints.
+
+- **Journalists and researchers**
+
+  People comparing meeting information across states and local governments.
+
+- **Anyone**
+
+  Anyone seeking a government's official meeting calendar, agenda, or minutes.
+
+- **Contributors**
+
+  People who want to correct a missing, broken, or deprecated government link.
 
 ---
 
 ## ⚙️ Extreme technicals below
 
-### Transparency: where no source was found
+> **Transparency regarding sources that were not found**
+>
+> 17,388 records are marked `needs_source` because I was unable to find an official meeting endpoint for them. This does not mean those governments are inactive or do not hold meetings. It means that, for whatever reason, I was unable to obtain an official endpoint for those locations.
+>
+> Among these locations, 91.4% have populations below 5,000, and the median population is 381.
 
-**17,388 catalog records are marked `needs_source` because no official meeting endpoint has been confirmed for them.** This does not mean those governments are inactive or do not hold meetings.
+### Current snapshot as of August 31, 2026
 
-Of those records, **17,383 matched a government in the U.S. Census Bureau's 2022 Government Units Listing**. Among the matched records, **91.4% have populations below 5,000**, and the median population is **381**. Five state-level records did not have a population value in the matched Census worksheet. The population figures are primarily 2021 estimates published in that listing.
+- 🟢 21,319 identified meeting endpoints
+- 🟢 20,085 identified meeting endpoints reviewed
+- 🟡 1,234 identified meeting endpoints awaiting review
+- 🔴 17,388 locations without an identified meeting endpoint
 
-### Current snapshot
+### Coverage total
 
-- **38,707 catalog records** cover every U.S. state, the District of Columbia, and the five inhabited territories.
-- **21,319 records include an identified meeting endpoint.**
-- **20,085 of those endpoints have been reviewed.**
-- **1,234 identified endpoints are awaiting review.**
-- **17,388 records do not yet have an identified meeting endpoint.**
+The identified and unidentified locations above total 38,707 locations checked.
 
-The initial roster comes from the Census Bureau's 2022 Government Units Listing. It covers the active state, county, municipal, and township governments listed there. It is not a complete list of every Tribal government, special district, unincorporated community, newer government, or other civic body.
+### Auditing the catalog
 
-### Browse the catalog
-
-Records are stored as newline-delimited JSON, with one complete record per line:
+Catalog entries are stored under [`states/`](states/) as one JSONL file per state or territory. Each line is one complete record.
 
 ```text
 states/
@@ -51,11 +63,9 @@ states/
 
 Each file uses schema version `2.0.0` and is sorted by `catalog_record_id`.
 
-An endpoint covering more than one state is stored once under the alphabetically first state code in its `state_codes` list. Use the record's full `state_codes` and `coverage` values instead of treating the filename as its only geography.
+An endpoint covering more than one state is stored under the alphabetically first state code in its `state_codes` list. Use the record's full `state_codes` and `coverage` values when auditing its geography.
 
-Version 2 renamed ambiguous version 1 fields without changing stable record IDs or catalog facts. [`MIGRATING_V1_TO_V2.md`](MIGRATING_V1_TO_V2.md) contains the complete mapping.
-
-### Understand a record
+### Auditing a record
 
 Every entry follows [`schema.json`](schema.json). The main field groups are:
 
@@ -65,17 +75,15 @@ Every entry follows [`schema.json`](schema.json). The main field groups are:
 - **Meeting endpoint:** `meeting_source_url`, its type, platform, access method, and relationship to the government.
 - **Verification:** the endpoint's status, last checked date, and evidence URL.
 
-The status values mean:
+#### Status values
 
 - `needs_source`: no meeting endpoint is recorded.
 - `unverified`: an endpoint is recorded but still awaits maintainer review.
 - `working`, `empty`, `blocked`, `broken`, `moved`, or `retired`: the result observed on the record's last checked date, not a guarantee about its condition today.
 
-An endpoint is included only when it belongs to the government or to a service the government officially uses. Inclusion does not guarantee that the endpoint is complete or still available.
+### How to use
 
-### Running it locally
-
-National Civics Catalog is a dataset, not an application. There is no server to run and no installation step. Clone the repository and read the JSONL files directly:
+Clone the repository and read the JSONL files directly:
 
 ```bash
 git clone https://github.com/anitacigawet/national-civics-catalog.git
@@ -106,19 +114,11 @@ python .github/scripts/validate_catalog.py
 
 ### Methodology
 
-The catalog starts with a defined government roster. Each government is then checked for an official meeting endpoint. If an endpoint cannot be confirmed, the government remains in the catalog with `needs_source` status.
-
 Read the [full methodology](methodology/README.md), or give [`RESPAWN.md`](methodology/RESPAWN.md) to an AI to adapt the process for another country.
 
 ### Using linked material
 
-CC0 covers catalog data, schema, metadata, and documentation that ScootSolute LLC and contributors have the right to dedicate. It does not cover agendas, minutes, recordings, software, personal information, or other material published at the linked endpoints.
-
-Linked material may be governed by laws, licenses, privacy requirements, and the source's own terms. Check those rules before reproducing or redistributing it, especially commercially. This is general information, not legal advice.
-
-### Relationship to Z-SPAN
-
-[Z-SPAN](https://zspan.org) is a separate application that uses civic meeting-source data. This repository contains the catalog and its metadata, not Z-SPAN's parsers or application code.
+CC0 applies to the catalog's data, schema, metadata, and documentation. It does not apply to agendas, minutes, recordings, or other content published at the linked endpoints. If you reuse linked material, follow the source's terms and any applicable laws. See [`NOTICE`](NOTICE) for details.
 
 ### Contribute
 
@@ -134,6 +134,4 @@ ScootSolute LLC maintains the catalog with help from contributors. Newly submitt
 
 ### License
 
-Catalog data, schema, metadata, and documentation are released under the [CC0 1.0 Universal public-domain dedication](LICENSE). Supporting scripts and workflows under [`.github/scripts/`](.github/scripts/) and [`.github/workflows/`](.github/workflows/) are available under the [MIT License](LICENSE-MIT).
-
-See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for the boundaries covering linked material, third-party content, and trademarks.
+Catalog data, schema, metadata, and documentation are released under [CC0 1.0 Universal](LICENSE). Supporting scripts and workflows are released under the [MIT License](LICENSE-MIT). See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.

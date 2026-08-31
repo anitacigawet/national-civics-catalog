@@ -78,11 +78,11 @@ class ContributionCheckTests(unittest.TestCase):
                 payload, encoding="utf-8", newline="\n"
             )
         self.base.joinpath("README.md").write_text(
-            """**56 catalog records**
-**0 records include an identified meeting endpoint.**
-**0 of those endpoints have been reviewed.**
-**0 identified endpoints are awaiting review.**
-**56 records do not yet have an identified meeting endpoint.**
+            """- 🟢 0 identified meeting endpoints
+- 🟢 0 identified meeting endpoints reviewed
+- 🟡 0 identified meeting endpoints awaiting review
+- 🔴 56 locations without an identified meeting endpoint
+The identified and unidentified locations above total 56 locations checked.
 """,
             encoding="utf-8",
             newline="\n",
