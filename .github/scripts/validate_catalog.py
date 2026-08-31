@@ -61,11 +61,11 @@ CATALOG_RECORD_ID = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 CENSUS_GEOID = re.compile(r"^[0-9]{2,15}$")
 MAX_PERCENT_DECODE_ROUNDS = 3
 SNAPSHOT_PATTERNS = {
-    "total": re.compile(r"\*\*([0-9,]+) catalog entries\*\*"),
-    "identified": re.compile(r"\*\*([0-9,]+) entries contain an identified meeting source\.\*\*"),
-    "not_unverified": re.compile(r"\*\*([0-9,]+) identified meeting sources have a status other than `unverified`\.\*\*"),
-    "unverified": re.compile(r"\*\*([0-9,]+) identified meeting sources have `meeting_source_status: \"unverified\"`\.\*\*"),
-    "needs_source": re.compile(r"\*\*([0-9,]+) entries have `meeting_source_status: \"needs_source\"` and no meeting-source claim\.\*\*"),
+    "total": re.compile(r"\*\*([0-9,]+) catalog records\*\*"),
+    "identified": re.compile(r"\*\*([0-9,]+) records include an identified meeting endpoint\.\*\*"),
+    "not_unverified": re.compile(r"\*\*([0-9,]+) of those endpoints have been reviewed\.\*\*"),
+    "unverified": re.compile(r"\*\*([0-9,]+) identified endpoints are awaiting review\.\*\*"),
+    "needs_source": re.compile(r"\*\*([0-9,]+) records do not yet have an identified meeting endpoint\.\*\*"),
 }
 
 
