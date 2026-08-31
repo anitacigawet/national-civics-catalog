@@ -84,6 +84,14 @@ print(f"Loaded {len(sources)} identified endpoints")
 
 Catalog material released under CC0 may be copied, combined, redistributed, or used in commercial and noncommercial projects without separate permission.
 
+## Methodology
+
+The catalog was built by deriving a complete government roster first, then
+researching and independently reviewing continuing meeting sources without
+removing unresolved governments. See the [human-readable methodology](methodology/README.md)
+or give [RESPAWN.md](methodology/RESPAWN.md) to an AI to adapt the process for
+another country.
+
 ## Using linked material
 
 The catalog's CC0 dedication covers the catalog material that ScootSolute LLC and contributors have the right to dedicate. It does not grant rights to records, documents, media, software, personal information, or other content available through the sources it identifies.
