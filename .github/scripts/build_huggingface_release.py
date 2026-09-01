@@ -88,14 +88,14 @@ def atomic_write(path: Path, payload: bytes) -> None:
 
 def dataset_card(root: Path, record_count: int) -> bytes:
     readme = (root / "README.md").read_text(encoding="utf-8")
-    repository_count = f"total {record_count:,} locations checked."
+    repository_count = f"Total locations checked: {record_count:,}."
     if readme.count(repository_count) != 1:
         raise ValueError(
             "README.md catalog count does not match the generated national dataset"
         )
     readme = readme.replace(
         repository_count,
-        f"total {record_count:,} locations checked in this dataset release.",
+        f"Total locations checked in this dataset release: {record_count:,}.",
         1,
     )
     marker = "### Auditing the catalog\n\n"

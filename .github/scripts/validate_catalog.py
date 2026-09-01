@@ -61,10 +61,10 @@ CATALOG_RECORD_ID = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
 CENSUS_GEOID = re.compile(r"^[0-9]{2,15}$")
 MAX_PERCENT_DECODE_ROUNDS = 3
 SNAPSHOT_PATTERNS = {
-    "total": re.compile(r"total ([0-9,]+) locations checked\."),
+    "total": re.compile(r"Total locations checked: ([0-9,]+)\."),
     "identified": re.compile(r"🟢 ([0-9,]+) identified meeting endpoints(?:\r?\n|$)"),
-    "not_unverified": re.compile(r"🟢 ([0-9,]+) identified meeting endpoints reviewed"),
-    "unverified": re.compile(r"🟡 ([0-9,]+) identified meeting endpoints awaiting review"),
+    "not_unverified": re.compile(r"🟢 ([0-9,]+) reviewed"),
+    "unverified": re.compile(r"🟡 ([0-9,]+) awaiting review"),
     "needs_source": re.compile(r"🔴 ([0-9,]+) locations without an identified meeting endpoint"),
 }
 

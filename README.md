@@ -14,19 +14,19 @@ The National Civics Catalog is a nationwide directory of endpoints where states,
 
 - **Developers**
 
-  Anyone building civic tools that need a consistently updated list of official meeting endpoints.
+  Building civic tools that need a consistently updated list of official meeting endpoints.
 
 - **Journalists and researchers**
 
-  People comparing meeting information across states and local governments.
+  Comparing meeting information across states and local governments.
 
 - **Anyone**
 
-  Anyone seeking a government's official meeting calendar, agenda, or minutes.
+  Looking for a government's official meeting calendar, agenda, or minutes.
 
 - **Contributors**
 
-  People who want to correct a missing, broken, or deprecated government link.
+  Correcting a missing, broken, or deprecated government link.
 
 ---
 
@@ -41,13 +41,13 @@ The National Civics Catalog is a nationwide directory of endpoints where states,
 ### Current snapshot as of August 31, 2026
 
 - 🟢 21,319 identified meeting endpoints
-- 🟢 20,085 identified meeting endpoints reviewed
-- 🟡 1,234 identified meeting endpoints awaiting review
+- 🟢 20,085 reviewed
+- 🟡 1,234 awaiting review
 - 🔴 17,388 locations without an identified meeting endpoint
 
 ### Coverage total
 
-The identified and unidentified locations above total 38,707 locations checked.
+Total locations checked: 38,707.
 
 ### Auditing the catalog
 
@@ -116,22 +116,19 @@ python .github/scripts/validate_catalog.py
 
 Read the [full methodology](methodology/README.md), or give [`RESPAWN.md`](methodology/RESPAWN.md) to an AI to adapt the process for another country.
 
-### Using linked material
-
-CC0 applies to the catalog's data, schema, metadata, and documentation. It does not apply to agendas, minutes, recordings, or other content published at the linked endpoints. If you reuse linked material, follow the source's terms and any applicable laws. See [`NOTICE`](NOTICE) for details.
-
 ### Contribute
 
-Factual corrections, source suggestions, and focused pull requests are welcome. The GitHub issue forms ask for the evidence needed to review a change.
+Use the GitHub issue forms to submit a factual correction or source suggestion. Include public evidence for the change.
 
-If you are comfortable editing JSON, update the appropriate record under [`states/`](states/) and follow [`CONTRIBUTING.md`](CONTRIBUTING.md). [`AI_CONTRIBUTOR.md`](AI_CONTRIBUTOR.md) provides a copy-and-paste workflow for researching one source with an AI assistant and checking the result before opening a pull request.
+To edit JSON directly, update the appropriate record under [`states/`](states/) and follow [`CONTRIBUTING.md`](CONTRIBUTING.md). To research one source with an AI assistant, use [`AI_CONTRIBUTOR.md`](AI_CONTRIBUTOR.md).
 
-Catalog contributions are released under CC0. Supporting software and workflow contributions are released under the MIT License.
+Newly submitted endpoints remain `unverified` until reviewed.
 
-### Maintenance
+### License and linked material
 
-ScootSolute LLC maintains the catalog with help from contributors. Newly submitted endpoints remain `unverified` until their evidence and behavior have been reviewed.
+- Catalog data, schema, metadata, and documentation are released under [CC0 1.0 Universal](LICENSE).
+- Supporting scripts and workflows are released under the [MIT License](LICENSE-MIT).
 
-### License
+These licenses do not cover agendas, minutes, recordings, or other content published at linked endpoints. Follow the source's terms and applicable laws when reusing linked material.
 
-Catalog data, schema, metadata, and documentation are released under [CC0 1.0 Universal](LICENSE). Supporting scripts and workflows are released under the [MIT License](LICENSE-MIT). See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.
+See [`NOTICE`](NOTICE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.
